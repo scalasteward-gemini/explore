@@ -36,6 +36,10 @@ lazy val common = project
   .settings(commonSettings: _*)
   .settings(commonLibSettings: _*)
   .settings(
+    // Not published for Scala 2.13. Anyway, we don't want to use Apollo in runtime.
+    // resolvers += "Apollo Bintray" at "https://dl.bintray.com/apollographql/maven/",
+    // libraryDependencies += "com.apollographql" %%% "apollo-scalajs-core" % "0.7.0",
+
     useYarn := true,
     npmDevDependencies in Compile ++= Seq(
       "apollo" -> "2.21.3"
