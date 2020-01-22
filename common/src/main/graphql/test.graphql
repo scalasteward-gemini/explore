@@ -1,0 +1,8 @@
+query PersonsTest {
+  allPersons {
+    name
+    films {
+      director
+    }
+  }
+}

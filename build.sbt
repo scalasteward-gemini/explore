@@ -35,6 +35,34 @@ lazy val common = project
   .in(file("common"))
   .settings(commonSettings: _*)
   .settings(commonLibSettings: _*)
+  .settings(
+    useYarn := true,
+    npmDevDependencies in Compile ++= Seq(
+      "apollo" -> "2.21.3"
+    ),    
+    (sourceGenerators in Compile) += Def.task {
+      import scala.sys.process._
+
+      val apollo = target.value / ("scala-" + scalaBinaryVersion.value) / "scalajs-bundler" / "main" / "node_modules" / ".bin" / "apollo"
+      val config = (baseDirectory.value relativeTo (baseDirectory in ThisBuild).value).get / "apollo.config.js"
+      val namespace = "explore.graphql"
+      val outDir = (sourceManaged in Compile).value
+      val outFile = outDir / "graphql.scala"
+
+      outDir.mkdirs()
+
+      Seq(
+        apollo.toString, "client:codegen",
+        "--config", config.toString,
+        "--target", "scala",
+        "--namespace", namespace, outFile.toString
+      ).!
+
+      Seq(outFile)
+    },
+    watchSources ++= ((sourceDirectory in Compile).value / "graphql" ** "*.graphql").get,
+    (managedSources in Compile) := ((managedSources in Compile) dependsOn (npmInstallDependencies in Compile)).value
+  )
   .enablePlugins(ScalaJSBundlerPlugin)
 
 lazy val conditions = project
@@ -124,7 +152,7 @@ lazy val commonWDS = Seq(
     "optimize-css-assets-webpack-plugin" -> "5.0.3",
     "favicons-webpack-plugin" -> "0.0.9",
     "why-did-you-update" -> "1.0.6",
-    "@packtracker/webpack-plugin" -> "2.2.0"
+    "@packtracker/webpack-plugin" -> "2.2.0"    
   ),
   npmDependencies in Compile ++= Seq(
     "react" -> reactJS,
