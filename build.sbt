@@ -36,6 +36,8 @@ lazy val common = project
   .settings(commonSettings: _*)
   .settings(commonLibSettings: _*)
   .settings(
+    // https://github.com/muuki88/sbt-graphql#code-generation
+    
     graphqlCodegenJson := JsonCodec.Circe,
     graphqlCodegenStyle := Sangria
 
