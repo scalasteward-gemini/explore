@@ -8,4 +8,5 @@ import cats.effect._
 
 object Actions {
   implicit object TargetActionsIO extends TargetActionsInterpreter[IO](Views.target)
+  implicit object PersonsActionsIO extends PersonsActionsInterpreter[IO](Views.persons)
 }
