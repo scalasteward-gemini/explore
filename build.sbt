@@ -35,7 +35,25 @@ lazy val common = project
   .in(file("common"))
   .settings(commonSettings: _*)
   .settings(commonLibSettings: _*)
-  .enablePlugins(ScalaJSBundlerPlugin)
+  .settings(
+    graphqlCodegenJson := JsonCodec.Circe,
+    graphqlCodegenStyle := Sangria
+
+    // graphqlSchemas += GraphQLSchema(
+      // "starwars",
+      // "starwars schema at https://raw.githubusercontent.com/graphql/swapi-graphql/master/schema.graphql",
+      // Def.task(
+        // GraphQLSchemaLoader
+
+          // .fromIntrospection("https://raw.githubusercontent.com/graphql/swapi-graphql/master/schema.graphql", streams.value.log)
+          // .withHeaders("User-Agent" -> s"sbt-graphql/${version.value}")
+          // .loadSchema()
+      // ).taskValue
+    // ),
+    // use this schema for the code generation
+    // graphqlCodegenSchema := graphqlRenderSchema.toTask("starwars").value
+  )
+  .enablePlugins(ScalaJSBundlerPlugin, GraphQLCodegenPlugin)
 
 lazy val conditions = project
   .in(file("conditions"))

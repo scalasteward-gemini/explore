@@ -1,0 +1,3837 @@
+enum _ModelMutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type _QueryMeta {
+  count: Int!
+}
+
+type AddToFilmPlanetsPayload {
+  filmsFilm: Film
+  planetsPlanet: Planet
+}
+
+type AddToFilmSpeciesPayload {
+  filmsFilm: Film
+  speciesSpecies: Species
+}
+
+type AddToFilmStarshipsPayload {
+  filmsFilm: Film
+  starshipsStarship: Starship
+}
+
+type AddToFilmVehiclesPayload {
+  filmsFilm: Film
+  vehiclesVehicle: Vehicle
+}
+
+type AddToPeopleFilmPayload {
+  charactersPerson: Person
+  filmsFilm: Film
+}
+
+type AddToPeoplePlanetPayload {
+  residentsPerson: Person
+  homeworldPlanet: Planet
+}
+
+type AddToPeopleSpeciesPayload {
+  peoplePerson: Person
+  speciesSpecies: Species
+}
+
+type AddToPeopleStarshipsPayload {
+  pilotsPerson: Person
+  starshipsStarship: Starship
+}
+
+type AddToPeopleVehiclesPayload {
+  pilotsPerson: Person
+  vehiclesVehicle: Vehicle
+}
+
+type Asset implements Node {
+  createdAt: DateTime!
+  fileName: String!
+  handle: String!
+  height: Float
+  id: ID!
+  mimeType: String
+  size: Float!
+  updatedAt: DateTime!
+  url: String!
+  width: Float
+}
+
+input AssetFilter {
+  AND: [AssetFilter!]
+  OR: [AssetFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  fileName: String
+  fileName_not: String
+  fileName_in: [String!]
+  fileName_not_in: [String!]
+  fileName_lt: String
+  fileName_lte: String
+  fileName_gt: String
+  fileName_gte: String
+  fileName_contains: String
+  fileName_not_contains: String
+  fileName_starts_with: String
+  fileName_not_starts_with: String
+  fileName_ends_with: String
+  fileName_not_ends_with: String
+  handle: String
+  handle_not: String
+  handle_in: [String!]
+  handle_not_in: [String!]
+  handle_lt: String
+  handle_lte: String
+  handle_gt: String
+  handle_gte: String
+  handle_contains: String
+  handle_not_contains: String
+  handle_starts_with: String
+  handle_not_starts_with: String
+  handle_ends_with: String
+  handle_not_ends_with: String
+  height: Float
+  height_not: Float
+  height_in: [Float!]
+  height_not_in: [Float!]
+  height_lt: Float
+  height_lte: Float
+  height_gt: Float
+  height_gte: Float
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  mimeType: String
+  mimeType_not: String
+  mimeType_in: [String!]
+  mimeType_not_in: [String!]
+  mimeType_lt: String
+  mimeType_lte: String
+  mimeType_gt: String
+  mimeType_gte: String
+  mimeType_contains: String
+  mimeType_not_contains: String
+  mimeType_starts_with: String
+  mimeType_not_starts_with: String
+  mimeType_ends_with: String
+  mimeType_not_ends_with: String
+  size: Float
+  size_not: Float
+  size_in: [Float!]
+  size_not_in: [Float!]
+  size_lt: Float
+  size_lte: Float
+  size_gt: Float
+  size_gte: Float
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  url: String
+  url_not: String
+  url_in: [String!]
+  url_not_in: [String!]
+  url_lt: String
+  url_lte: String
+  url_gt: String
+  url_gte: String
+  url_contains: String
+  url_not_contains: String
+  url_starts_with: String
+  url_not_starts_with: String
+  url_ends_with: String
+  url_not_ends_with: String
+  width: Float
+  width_not: Float
+  width_in: [Float!]
+  width_not_in: [Float!]
+  width_lt: Float
+  width_lte: Float
+  width_gt: Float
+  width_gte: Float
+}
+
+enum AssetOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  fileName_ASC
+  fileName_DESC
+  handle_ASC
+  handle_DESC
+  height_ASC
+  height_DESC
+  id_ASC
+  id_DESC
+  mimeType_ASC
+  mimeType_DESC
+  size_ASC
+  size_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  url_ASC
+  url_DESC
+  width_ASC
+  width_DESC
+}
+
+type AssetPreviousValues {
+  createdAt: DateTime!
+  fileName: String!
+  handle: String!
+  height: Float
+  id: ID!
+  mimeType: String
+  size: Float!
+  updatedAt: DateTime!
+  url: String!
+  width: Float
+}
+
+input AssetSubscriptionFilter {
+  AND: [AssetSubscriptionFilter!]
+  OR: [AssetSubscriptionFilter!]
+  mutation_in: [_ModelMutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: AssetSubscriptionFilterNode
+}
+
+input AssetSubscriptionFilterNode {
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  fileName: String
+  fileName_not: String
+  fileName_in: [String!]
+  fileName_not_in: [String!]
+  fileName_lt: String
+  fileName_lte: String
+  fileName_gt: String
+  fileName_gte: String
+  fileName_contains: String
+  fileName_not_contains: String
+  fileName_starts_with: String
+  fileName_not_starts_with: String
+  fileName_ends_with: String
+  fileName_not_ends_with: String
+  handle: String
+  handle_not: String
+  handle_in: [String!]
+  handle_not_in: [String!]
+  handle_lt: String
+  handle_lte: String
+  handle_gt: String
+  handle_gte: String
+  handle_contains: String
+  handle_not_contains: String
+  handle_starts_with: String
+  handle_not_starts_with: String
+  handle_ends_with: String
+  handle_not_ends_with: String
+  height: Float
+  height_not: Float
+  height_in: [Float!]
+  height_not_in: [Float!]
+  height_lt: Float
+  height_lte: Float
+  height_gt: Float
+  height_gte: Float
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  mimeType: String
+  mimeType_not: String
+  mimeType_in: [String!]
+  mimeType_not_in: [String!]
+  mimeType_lt: String
+  mimeType_lte: String
+  mimeType_gt: String
+  mimeType_gte: String
+  mimeType_contains: String
+  mimeType_not_contains: String
+  mimeType_starts_with: String
+  mimeType_not_starts_with: String
+  mimeType_ends_with: String
+  mimeType_not_ends_with: String
+  size: Float
+  size_not: Float
+  size_in: [Float!]
+  size_not_in: [Float!]
+  size_lt: Float
+  size_lte: Float
+  size_gt: Float
+  size_gte: Float
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  url: String
+  url_not: String
+  url_in: [String!]
+  url_not_in: [String!]
+  url_lt: String
+  url_lte: String
+  url_gt: String
+  url_gte: String
+  url_contains: String
+  url_not_contains: String
+  url_starts_with: String
+  url_not_starts_with: String
+  url_ends_with: String
+  url_not_ends_with: String
+  width: Float
+  width_not: Float
+  width_in: [Float!]
+  width_not_in: [Float!]
+  width_lt: Float
+  width_lte: Float
+  width_gt: Float
+  width_gte: Float
+}
+
+type AssetSubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Asset
+  updatedFields: [String!]
+  previousValues: AssetPreviousValues
+}
+
+input CreateAsset {
+  fileName: String!
+  handle: String!
+  height: Float
+  mimeType: String
+  size: Float!
+  url: String!
+  width: Float
+}
+
+input CreateFilm {
+  director: String
+  episodeId: Int!
+  isPublished: Boolean
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String!
+  charactersIds: [ID!]
+  characters: [FilmcharactersPerson!]
+  planetsIds: [ID!]
+  planets: [FilmplanetsPlanet!]
+  speciesIds: [ID!]
+  species: [FilmspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [FilmstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [FilmvehiclesVehicle!]
+}
+
+input CreatePerson {
+  birthYear: String
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  isPublished: Boolean
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  homeworldId: ID
+  homeworld: PersonhomeworldPlanet
+  filmsIds: [ID!]
+  films: [PersonfilmsFilm!]
+  speciesIds: [ID!]
+  species: [PersonspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [PersonstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [PersonvehiclesVehicle!]
+}
+
+input CreatePlanet {
+  climate: [String!]
+  diameter: Int
+  gravity: String
+  isPublished: Boolean
+  name: String!
+  orbitalPeriod: Int
+  population: Float
+  rotationPeriod: Int
+  surfaceWater: Float
+  terrain: [String!]
+  filmsIds: [ID!]
+  films: [PlanetfilmsFilm!]
+  residentsIds: [ID!]
+  residents: [PlanetresidentsPerson!]
+}
+
+input CreateSpecies {
+  averageHeight: Int
+  averageLifespan: Int
+  classification: String
+  designation: String
+  eyeColor: [SPECIES_EYE_COLOR!]
+  hairColor: [SPECIES_HAIR_COLOR!]
+  isPublished: Boolean
+  language: String
+  name: String!
+  skinColor: [SPECIES_SKIN_COLOR!]
+  filmsIds: [ID!]
+  films: [SpeciesfilmsFilm!]
+  peopleIds: [ID!]
+  people: [SpeciespeoplePerson!]
+}
+
+input CreateStarship {
+  cargoCapacity: Float
+  class: String
+  consumables: String
+  costInCredits: Float
+  crew: Int
+  hyperdriveRating: Float
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  mglt: Int
+  name: String!
+  passengers: Int
+  filmsIds: [ID!]
+  films: [StarshipfilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [StarshippilotsPerson!]
+}
+
+input CreateVehicle {
+  cargoCapacity: Int
+  class: String
+  consumables: String
+  costInCredits: Int
+  crew: Int
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  model: String
+  name: String!
+  passengers: Int
+  filmsIds: [ID!]
+  films: [VehiclefilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [VehiclepilotsPerson!]
+}
+
+scalar DateTime
+
+type Film implements Node {
+  characters(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Person!]
+  createdAt: DateTime!
+  director: String
+  episodeId: Int!
+  id: ID!
+  isPublished: Boolean!
+  openingCrawl: String
+  planets(
+    filter: PlanetFilter
+    orderBy: PlanetOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Planet!]
+  producers: [String!]
+  releaseDate: DateTime
+  species(
+    filter: SpeciesFilter
+    orderBy: SpeciesOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Species!]
+  starships(
+    filter: StarshipFilter
+    orderBy: StarshipOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Starship!]
+  title: String!
+  updatedAt: DateTime!
+  vehicles(
+    filter: VehicleFilter
+    orderBy: VehicleOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Vehicle!]
+  _charactersMeta(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _planetsMeta(
+    filter: PlanetFilter
+    orderBy: PlanetOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _speciesMeta(
+    filter: SpeciesFilter
+    orderBy: SpeciesOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _starshipsMeta(
+    filter: StarshipFilter
+    orderBy: StarshipOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _vehiclesMeta(
+    filter: VehicleFilter
+    orderBy: VehicleOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+}
+
+input FilmcharactersPerson {
+  birthYear: String
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  isPublished: Boolean
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  homeworldId: ID
+  homeworld: PersonhomeworldPlanet
+  filmsIds: [ID!]
+  films: [PersonfilmsFilm!]
+  speciesIds: [ID!]
+  species: [PersonspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [PersonstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [PersonvehiclesVehicle!]
+}
+
+input FilmFilter {
+  AND: [FilmFilter!]
+  OR: [FilmFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  director: String
+  director_not: String
+  director_in: [String!]
+  director_not_in: [String!]
+  director_lt: String
+  director_lte: String
+  director_gt: String
+  director_gte: String
+  director_contains: String
+  director_not_contains: String
+  director_starts_with: String
+  director_not_starts_with: String
+  director_ends_with: String
+  director_not_ends_with: String
+  episodeId: Int
+  episodeId_not: Int
+  episodeId_in: [Int!]
+  episodeId_not_in: [Int!]
+  episodeId_lt: Int
+  episodeId_lte: Int
+  episodeId_gt: Int
+  episodeId_gte: Int
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  openingCrawl: String
+  openingCrawl_not: String
+  openingCrawl_in: [String!]
+  openingCrawl_not_in: [String!]
+  openingCrawl_lt: String
+  openingCrawl_lte: String
+  openingCrawl_gt: String
+  openingCrawl_gte: String
+  openingCrawl_contains: String
+  openingCrawl_not_contains: String
+  openingCrawl_starts_with: String
+  openingCrawl_not_starts_with: String
+  openingCrawl_ends_with: String
+  openingCrawl_not_ends_with: String
+  releaseDate: DateTime
+  releaseDate_not: DateTime
+  releaseDate_in: [DateTime!]
+  releaseDate_not_in: [DateTime!]
+  releaseDate_lt: DateTime
+  releaseDate_lte: DateTime
+  releaseDate_gt: DateTime
+  releaseDate_gte: DateTime
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  characters_every: PersonFilter
+  characters_some: PersonFilter
+  characters_none: PersonFilter
+  planets_every: PlanetFilter
+  planets_some: PlanetFilter
+  planets_none: PlanetFilter
+  species_every: SpeciesFilter
+  species_some: SpeciesFilter
+  species_none: SpeciesFilter
+  starships_every: StarshipFilter
+  starships_some: StarshipFilter
+  starships_none: StarshipFilter
+  vehicles_every: VehicleFilter
+  vehicles_some: VehicleFilter
+  vehicles_none: VehicleFilter
+}
+
+enum FilmOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  director_ASC
+  director_DESC
+  episodeId_ASC
+  episodeId_DESC
+  id_ASC
+  id_DESC
+  isPublished_ASC
+  isPublished_DESC
+  openingCrawl_ASC
+  openingCrawl_DESC
+  releaseDate_ASC
+  releaseDate_DESC
+  title_ASC
+  title_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input FilmplanetsPlanet {
+  climate: [String!]
+  diameter: Int
+  gravity: String
+  isPublished: Boolean
+  name: String!
+  orbitalPeriod: Int
+  population: Float
+  rotationPeriod: Int
+  surfaceWater: Float
+  terrain: [String!]
+  filmsIds: [ID!]
+  films: [PlanetfilmsFilm!]
+  residentsIds: [ID!]
+  residents: [PlanetresidentsPerson!]
+}
+
+type FilmPreviousValues {
+  createdAt: DateTime!
+  director: String
+  episodeId: Int!
+  id: ID!
+  isPublished: Boolean!
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String!
+  updatedAt: DateTime!
+}
+
+input FilmspeciesSpecies {
+  averageHeight: Int
+  averageLifespan: Int
+  classification: String
+  designation: String
+  eyeColor: [SPECIES_EYE_COLOR!]
+  hairColor: [SPECIES_HAIR_COLOR!]
+  isPublished: Boolean
+  language: String
+  name: String!
+  skinColor: [SPECIES_SKIN_COLOR!]
+  filmsIds: [ID!]
+  films: [SpeciesfilmsFilm!]
+  peopleIds: [ID!]
+  people: [SpeciespeoplePerson!]
+}
+
+input FilmstarshipsStarship {
+  cargoCapacity: Float
+  class: String
+  consumables: String
+  costInCredits: Float
+  crew: Int
+  hyperdriveRating: Float
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  mglt: Int
+  name: String!
+  passengers: Int
+  filmsIds: [ID!]
+  films: [StarshipfilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [StarshippilotsPerson!]
+}
+
+input FilmSubscriptionFilter {
+  AND: [FilmSubscriptionFilter!]
+  OR: [FilmSubscriptionFilter!]
+  mutation_in: [_ModelMutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: FilmSubscriptionFilterNode
+}
+
+input FilmSubscriptionFilterNode {
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  director: String
+  director_not: String
+  director_in: [String!]
+  director_not_in: [String!]
+  director_lt: String
+  director_lte: String
+  director_gt: String
+  director_gte: String
+  director_contains: String
+  director_not_contains: String
+  director_starts_with: String
+  director_not_starts_with: String
+  director_ends_with: String
+  director_not_ends_with: String
+  episodeId: Int
+  episodeId_not: Int
+  episodeId_in: [Int!]
+  episodeId_not_in: [Int!]
+  episodeId_lt: Int
+  episodeId_lte: Int
+  episodeId_gt: Int
+  episodeId_gte: Int
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  openingCrawl: String
+  openingCrawl_not: String
+  openingCrawl_in: [String!]
+  openingCrawl_not_in: [String!]
+  openingCrawl_lt: String
+  openingCrawl_lte: String
+  openingCrawl_gt: String
+  openingCrawl_gte: String
+  openingCrawl_contains: String
+  openingCrawl_not_contains: String
+  openingCrawl_starts_with: String
+  openingCrawl_not_starts_with: String
+  openingCrawl_ends_with: String
+  openingCrawl_not_ends_with: String
+  releaseDate: DateTime
+  releaseDate_not: DateTime
+  releaseDate_in: [DateTime!]
+  releaseDate_not_in: [DateTime!]
+  releaseDate_lt: DateTime
+  releaseDate_lte: DateTime
+  releaseDate_gt: DateTime
+  releaseDate_gte: DateTime
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  characters_every: PersonFilter
+  characters_some: PersonFilter
+  characters_none: PersonFilter
+  planets_every: PlanetFilter
+  planets_some: PlanetFilter
+  planets_none: PlanetFilter
+  species_every: SpeciesFilter
+  species_some: SpeciesFilter
+  species_none: SpeciesFilter
+  starships_every: StarshipFilter
+  starships_some: StarshipFilter
+  starships_none: StarshipFilter
+  vehicles_every: VehicleFilter
+  vehicles_some: VehicleFilter
+  vehicles_none: VehicleFilter
+}
+
+type FilmSubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Film
+  updatedFields: [String!]
+  previousValues: FilmPreviousValues
+}
+
+input FilmvehiclesVehicle {
+  cargoCapacity: Int
+  class: String
+  consumables: String
+  costInCredits: Int
+  crew: Int
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  model: String
+  name: String!
+  passengers: Int
+  filmsIds: [ID!]
+  films: [VehiclefilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [VehiclepilotsPerson!]
+}
+
+input InvokeFunctionInput {
+  name: String!
+  input: String!
+  clientMutationId: String
+}
+
+type InvokeFunctionPayload {
+  result: String!
+  clientMutationId: String
+}
+
+type Mutation {
+  createAsset(
+    fileName: String!
+    handle: String!
+    height: Float
+    mimeType: String
+    size: Float!
+    url: String!
+    width: Float
+  ): Asset
+  createFilm(
+    director: String
+    episodeId: Int!
+    isPublished: Boolean
+    openingCrawl: String
+    producers: [String!]
+    releaseDate: DateTime
+    title: String!
+    charactersIds: [ID!]
+    characters: [FilmcharactersPerson!]
+    planetsIds: [ID!]
+    planets: [FilmplanetsPlanet!]
+    speciesIds: [ID!]
+    species: [FilmspeciesSpecies!]
+    starshipsIds: [ID!]
+    starships: [FilmstarshipsStarship!]
+    vehiclesIds: [ID!]
+    vehicles: [FilmvehiclesVehicle!]
+  ): Film
+  createPerson(
+    birthYear: String
+    eyeColor: [PERSON_EYE_COLOR!]
+    gender: PERSON_GENDER
+    hairColor: [PERSON_HAIR_COLOR!]
+    height: Int
+    isPublished: Boolean
+    mass: Float
+    name: String!
+    skinColor: [PERSON_SKIN_COLOR!]
+    homeworldId: ID
+    homeworld: PersonhomeworldPlanet
+    filmsIds: [ID!]
+    films: [PersonfilmsFilm!]
+    speciesIds: [ID!]
+    species: [PersonspeciesSpecies!]
+    starshipsIds: [ID!]
+    starships: [PersonstarshipsStarship!]
+    vehiclesIds: [ID!]
+    vehicles: [PersonvehiclesVehicle!]
+  ): Person
+  createPlanet(
+    climate: [String!]
+    diameter: Int
+    gravity: String
+    isPublished: Boolean
+    name: String!
+    orbitalPeriod: Int
+    population: Float
+    rotationPeriod: Int
+    surfaceWater: Float
+    terrain: [String!]
+    filmsIds: [ID!]
+    films: [PlanetfilmsFilm!]
+    residentsIds: [ID!]
+    residents: [PlanetresidentsPerson!]
+  ): Planet
+  createSpecies(
+    averageHeight: Int
+    averageLifespan: Int
+    classification: String
+    designation: String
+    eyeColor: [SPECIES_EYE_COLOR!]
+    hairColor: [SPECIES_HAIR_COLOR!]
+    isPublished: Boolean
+    language: String
+    name: String!
+    skinColor: [SPECIES_SKIN_COLOR!]
+    filmsIds: [ID!]
+    films: [SpeciesfilmsFilm!]
+    peopleIds: [ID!]
+    people: [SpeciespeoplePerson!]
+  ): Species
+  createStarship(
+    cargoCapacity: Float
+    class: String
+    consumables: String
+    costInCredits: Float
+    crew: Int
+    hyperdriveRating: Float
+    isPublished: Boolean
+    length: Float
+    manufacturer: [String!]
+    maxAtmospheringSpeed: Int
+    mglt: Int
+    name: String!
+    passengers: Int
+    filmsIds: [ID!]
+    films: [StarshipfilmsFilm!]
+    pilotsIds: [ID!]
+    pilots: [StarshippilotsPerson!]
+  ): Starship
+  createVehicle(
+    cargoCapacity: Int
+    class: String
+    consumables: String
+    costInCredits: Int
+    crew: Int
+    isPublished: Boolean
+    length: Float
+    manufacturer: [String!]
+    maxAtmospheringSpeed: Int
+    model: String
+    name: String!
+    passengers: Int
+    filmsIds: [ID!]
+    films: [VehiclefilmsFilm!]
+    pilotsIds: [ID!]
+    pilots: [VehiclepilotsPerson!]
+  ): Vehicle
+  updateAsset(
+    fileName: String
+    handle: String
+    height: Float
+    id: ID!
+    mimeType: String
+    size: Float
+    url: String
+    width: Float
+  ): Asset
+  updateFilm(
+    director: String
+    episodeId: Int
+    id: ID!
+    isPublished: Boolean
+    openingCrawl: String
+    producers: [String!]
+    releaseDate: DateTime
+    title: String
+    charactersIds: [ID!]
+    characters: [FilmcharactersPerson!]
+    planetsIds: [ID!]
+    planets: [FilmplanetsPlanet!]
+    speciesIds: [ID!]
+    species: [FilmspeciesSpecies!]
+    starshipsIds: [ID!]
+    starships: [FilmstarshipsStarship!]
+    vehiclesIds: [ID!]
+    vehicles: [FilmvehiclesVehicle!]
+  ): Film
+  updatePerson(
+    birthYear: String
+    eyeColor: [PERSON_EYE_COLOR!]
+    gender: PERSON_GENDER
+    hairColor: [PERSON_HAIR_COLOR!]
+    height: Int
+    id: ID!
+    isPublished: Boolean
+    mass: Float
+    name: String
+    skinColor: [PERSON_SKIN_COLOR!]
+    homeworldId: ID
+    homeworld: PersonhomeworldPlanet
+    filmsIds: [ID!]
+    films: [PersonfilmsFilm!]
+    speciesIds: [ID!]
+    species: [PersonspeciesSpecies!]
+    starshipsIds: [ID!]
+    starships: [PersonstarshipsStarship!]
+    vehiclesIds: [ID!]
+    vehicles: [PersonvehiclesVehicle!]
+  ): Person
+  updatePlanet(
+    climate: [String!]
+    diameter: Int
+    gravity: String
+    id: ID!
+    isPublished: Boolean
+    name: String
+    orbitalPeriod: Int
+    population: Float
+    rotationPeriod: Int
+    surfaceWater: Float
+    terrain: [String!]
+    filmsIds: [ID!]
+    films: [PlanetfilmsFilm!]
+    residentsIds: [ID!]
+    residents: [PlanetresidentsPerson!]
+  ): Planet
+  updateSpecies(
+    averageHeight: Int
+    averageLifespan: Int
+    classification: String
+    designation: String
+    eyeColor: [SPECIES_EYE_COLOR!]
+    hairColor: [SPECIES_HAIR_COLOR!]
+    id: ID!
+    isPublished: Boolean
+    language: String
+    name: String
+    skinColor: [SPECIES_SKIN_COLOR!]
+    filmsIds: [ID!]
+    films: [SpeciesfilmsFilm!]
+    peopleIds: [ID!]
+    people: [SpeciespeoplePerson!]
+  ): Species
+  updateStarship(
+    cargoCapacity: Float
+    class: String
+    consumables: String
+    costInCredits: Float
+    crew: Int
+    hyperdriveRating: Float
+    id: ID!
+    isPublished: Boolean
+    length: Float
+    manufacturer: [String!]
+    maxAtmospheringSpeed: Int
+    mglt: Int
+    name: String
+    passengers: Int
+    filmsIds: [ID!]
+    films: [StarshipfilmsFilm!]
+    pilotsIds: [ID!]
+    pilots: [StarshippilotsPerson!]
+  ): Starship
+  updateVehicle(
+    cargoCapacity: Int
+    class: String
+    consumables: String
+    costInCredits: Int
+    crew: Int
+    id: ID!
+    isPublished: Boolean
+    length: Float
+    manufacturer: [String!]
+    maxAtmospheringSpeed: Int
+    model: String
+    name: String
+    passengers: Int
+    filmsIds: [ID!]
+    films: [VehiclefilmsFilm!]
+    pilotsIds: [ID!]
+    pilots: [VehiclepilotsPerson!]
+  ): Vehicle
+  updateOrCreateAsset(update: UpdateAsset!, create: CreateAsset!): Asset
+  updateOrCreateFilm(update: UpdateFilm!, create: CreateFilm!): Film
+  updateOrCreatePerson(update: UpdatePerson!, create: CreatePerson!): Person
+  updateOrCreatePlanet(update: UpdatePlanet!, create: CreatePlanet!): Planet
+  updateOrCreateSpecies(update: UpdateSpecies!, create: CreateSpecies!): Species
+  updateOrCreateStarship(
+    update: UpdateStarship!
+    create: CreateStarship!
+  ): Starship
+  updateOrCreateVehicle(update: UpdateVehicle!, create: CreateVehicle!): Vehicle
+  deleteAsset(id: ID!): Asset
+  deleteFilm(id: ID!): Film
+  deletePerson(id: ID!): Person
+  deletePlanet(id: ID!): Planet
+  deleteSpecies(id: ID!): Species
+  deleteStarship(id: ID!): Starship
+  deleteVehicle(id: ID!): Vehicle
+  addToFilmPlanets(
+    planetsPlanetId: ID!
+    filmsFilmId: ID!
+  ): AddToFilmPlanetsPayload
+  addToFilmSpecies(
+    speciesSpeciesId: ID!
+    filmsFilmId: ID!
+  ): AddToFilmSpeciesPayload
+  addToFilmStarships(
+    starshipsStarshipId: ID!
+    filmsFilmId: ID!
+  ): AddToFilmStarshipsPayload
+  addToFilmVehicles(
+    vehiclesVehicleId: ID!
+    filmsFilmId: ID!
+  ): AddToFilmVehiclesPayload
+  addToPeopleFilm(
+    filmsFilmId: ID!
+    charactersPersonId: ID!
+  ): AddToPeopleFilmPayload
+  addToPeoplePlanet(
+    homeworldPlanetId: ID!
+    residentsPersonId: ID!
+  ): AddToPeoplePlanetPayload
+  addToPeopleSpecies(
+    speciesSpeciesId: ID!
+    peoplePersonId: ID!
+  ): AddToPeopleSpeciesPayload
+  addToPeopleStarships(
+    starshipsStarshipId: ID!
+    pilotsPersonId: ID!
+  ): AddToPeopleStarshipsPayload
+  addToPeopleVehicles(
+    vehiclesVehicleId: ID!
+    pilotsPersonId: ID!
+  ): AddToPeopleVehiclesPayload
+  removeFromFilmPlanets(
+    planetsPlanetId: ID!
+    filmsFilmId: ID!
+  ): RemoveFromFilmPlanetsPayload
+  removeFromFilmSpecies(
+    speciesSpeciesId: ID!
+    filmsFilmId: ID!
+  ): RemoveFromFilmSpeciesPayload
+  removeFromFilmStarships(
+    starshipsStarshipId: ID!
+    filmsFilmId: ID!
+  ): RemoveFromFilmStarshipsPayload
+  removeFromFilmVehicles(
+    vehiclesVehicleId: ID!
+    filmsFilmId: ID!
+  ): RemoveFromFilmVehiclesPayload
+  removeFromPeopleFilm(
+    filmsFilmId: ID!
+    charactersPersonId: ID!
+  ): RemoveFromPeopleFilmPayload
+  removeFromPeoplePlanet(
+    homeworldPlanetId: ID!
+    residentsPersonId: ID!
+  ): RemoveFromPeoplePlanetPayload
+  removeFromPeopleSpecies(
+    speciesSpeciesId: ID!
+    peoplePersonId: ID!
+  ): RemoveFromPeopleSpeciesPayload
+  removeFromPeopleStarships(
+    starshipsStarshipId: ID!
+    pilotsPersonId: ID!
+  ): RemoveFromPeopleStarshipsPayload
+  removeFromPeopleVehicles(
+    vehiclesVehicleId: ID!
+    pilotsPersonId: ID!
+  ): RemoveFromPeopleVehiclesPayload
+  invokeFunction(input: InvokeFunctionInput!): InvokeFunctionPayload
+}
+
+interface Node {
+  id: ID!
+}
+
+type Person implements Node {
+  birthYear: String
+  createdAt: DateTime!
+  eyeColor: [PERSON_EYE_COLOR!]
+  films(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Film!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  homeworld(filter: PlanetFilter): Planet
+  id: ID!
+  isPublished: Boolean!
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  species(
+    filter: SpeciesFilter
+    orderBy: SpeciesOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Species!]
+  starships(
+    filter: StarshipFilter
+    orderBy: StarshipOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Starship!]
+  updatedAt: DateTime!
+  vehicles(
+    filter: VehicleFilter
+    orderBy: VehicleOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Vehicle!]
+  _filmsMeta(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _speciesMeta(
+    filter: SpeciesFilter
+    orderBy: SpeciesOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _starshipsMeta(
+    filter: StarshipFilter
+    orderBy: StarshipOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _vehiclesMeta(
+    filter: VehicleFilter
+    orderBy: VehicleOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+}
+
+enum PERSON_EYE_COLOR {
+  UNKNOWN
+  BLUE
+  YELLOW
+  RED
+  BROWN
+  BLUEGREY
+  BLACK
+  ORANGE
+  HAZEL
+  PINK
+  GOLD
+  GREEN
+  WHITE
+  DARK
+}
+
+enum PERSON_GENDER {
+  UNKNOWN
+  MALE
+  FEMALE
+  HERMAPHRODITE
+}
+
+enum PERSON_HAIR_COLOR {
+  AUBURN
+  BLACK
+  BLONDE
+  BROWN
+  GREY
+  UNKNOWN
+  WHITE
+}
+
+enum PERSON_SKIN_COLOR {
+  UNKNOWN
+  FAIR
+  GOLD
+  WHITE
+  LIGHT
+  GREEN
+  GREENTAN
+  PALE
+  METAL
+  DARK
+  BROWNMOTTLE
+  BROWN
+  GREY
+  MOTTLEDGREEN
+  ORANGE
+  BLUE
+  RED
+  YELLOW
+  TAN
+  SILVER
+}
+
+input PersonfilmsFilm {
+  director: String
+  episodeId: Int!
+  isPublished: Boolean
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String!
+  charactersIds: [ID!]
+  characters: [FilmcharactersPerson!]
+  planetsIds: [ID!]
+  planets: [FilmplanetsPlanet!]
+  speciesIds: [ID!]
+  species: [FilmspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [FilmstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [FilmvehiclesVehicle!]
+}
+
+input PersonFilter {
+  AND: [PersonFilter!]
+  OR: [PersonFilter!]
+  birthYear: String
+  birthYear_not: String
+  birthYear_in: [String!]
+  birthYear_not_in: [String!]
+  birthYear_lt: String
+  birthYear_lte: String
+  birthYear_gt: String
+  birthYear_gte: String
+  birthYear_contains: String
+  birthYear_not_contains: String
+  birthYear_starts_with: String
+  birthYear_not_starts_with: String
+  birthYear_ends_with: String
+  birthYear_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  gender: PERSON_GENDER
+  gender_not: PERSON_GENDER
+  gender_in: [PERSON_GENDER!]
+  gender_not_in: [PERSON_GENDER!]
+  height: Int
+  height_not: Int
+  height_in: [Int!]
+  height_not_in: [Int!]
+  height_lt: Int
+  height_lte: Int
+  height_gt: Int
+  height_gte: Int
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  mass: Float
+  mass_not: Float
+  mass_in: [Float!]
+  mass_not_in: [Float!]
+  mass_lt: Float
+  mass_lte: Float
+  mass_gt: Float
+  mass_gte: Float
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  homeworld: PlanetFilter
+  species_every: SpeciesFilter
+  species_some: SpeciesFilter
+  species_none: SpeciesFilter
+  starships_every: StarshipFilter
+  starships_some: StarshipFilter
+  starships_none: StarshipFilter
+  vehicles_every: VehicleFilter
+  vehicles_some: VehicleFilter
+  vehicles_none: VehicleFilter
+}
+
+input PersonhomeworldPlanet {
+  climate: [String!]
+  diameter: Int
+  gravity: String
+  isPublished: Boolean
+  name: String!
+  orbitalPeriod: Int
+  population: Float
+  rotationPeriod: Int
+  surfaceWater: Float
+  terrain: [String!]
+  filmsIds: [ID!]
+  films: [PlanetfilmsFilm!]
+  residentsIds: [ID!]
+  residents: [PlanetresidentsPerson!]
+}
+
+enum PersonOrderBy {
+  birthYear_ASC
+  birthYear_DESC
+  createdAt_ASC
+  createdAt_DESC
+  gender_ASC
+  gender_DESC
+  height_ASC
+  height_DESC
+  id_ASC
+  id_DESC
+  isPublished_ASC
+  isPublished_DESC
+  mass_ASC
+  mass_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type PersonPreviousValues {
+  birthYear: String
+  createdAt: DateTime!
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  id: ID!
+  isPublished: Boolean!
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  updatedAt: DateTime!
+}
+
+input PersonspeciesSpecies {
+  averageHeight: Int
+  averageLifespan: Int
+  classification: String
+  designation: String
+  eyeColor: [SPECIES_EYE_COLOR!]
+  hairColor: [SPECIES_HAIR_COLOR!]
+  isPublished: Boolean
+  language: String
+  name: String!
+  skinColor: [SPECIES_SKIN_COLOR!]
+  filmsIds: [ID!]
+  films: [SpeciesfilmsFilm!]
+  peopleIds: [ID!]
+  people: [SpeciespeoplePerson!]
+}
+
+input PersonstarshipsStarship {
+  cargoCapacity: Float
+  class: String
+  consumables: String
+  costInCredits: Float
+  crew: Int
+  hyperdriveRating: Float
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  mglt: Int
+  name: String!
+  passengers: Int
+  filmsIds: [ID!]
+  films: [StarshipfilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [StarshippilotsPerson!]
+}
+
+input PersonSubscriptionFilter {
+  AND: [PersonSubscriptionFilter!]
+  OR: [PersonSubscriptionFilter!]
+  mutation_in: [_ModelMutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: PersonSubscriptionFilterNode
+}
+
+input PersonSubscriptionFilterNode {
+  birthYear: String
+  birthYear_not: String
+  birthYear_in: [String!]
+  birthYear_not_in: [String!]
+  birthYear_lt: String
+  birthYear_lte: String
+  birthYear_gt: String
+  birthYear_gte: String
+  birthYear_contains: String
+  birthYear_not_contains: String
+  birthYear_starts_with: String
+  birthYear_not_starts_with: String
+  birthYear_ends_with: String
+  birthYear_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  gender: PERSON_GENDER
+  gender_not: PERSON_GENDER
+  gender_in: [PERSON_GENDER!]
+  gender_not_in: [PERSON_GENDER!]
+  height: Int
+  height_not: Int
+  height_in: [Int!]
+  height_not_in: [Int!]
+  height_lt: Int
+  height_lte: Int
+  height_gt: Int
+  height_gte: Int
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  mass: Float
+  mass_not: Float
+  mass_in: [Float!]
+  mass_not_in: [Float!]
+  mass_lt: Float
+  mass_lte: Float
+  mass_gt: Float
+  mass_gte: Float
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  homeworld: PlanetFilter
+  species_every: SpeciesFilter
+  species_some: SpeciesFilter
+  species_none: SpeciesFilter
+  starships_every: StarshipFilter
+  starships_some: StarshipFilter
+  starships_none: StarshipFilter
+  vehicles_every: VehicleFilter
+  vehicles_some: VehicleFilter
+  vehicles_none: VehicleFilter
+}
+
+type PersonSubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Person
+  updatedFields: [String!]
+  previousValues: PersonPreviousValues
+}
+
+input PersonvehiclesVehicle {
+  cargoCapacity: Int
+  class: String
+  consumables: String
+  costInCredits: Int
+  crew: Int
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  model: String
+  name: String!
+  passengers: Int
+  filmsIds: [ID!]
+  films: [VehiclefilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [VehiclepilotsPerson!]
+}
+
+type Planet implements Node {
+  climate: [String!]
+  createdAt: DateTime!
+  diameter: Int
+  films(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Film!]
+  gravity: String
+  id: ID!
+  isPublished: Boolean!
+  name: String!
+  orbitalPeriod: Int
+  population: Float
+  residents(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Person!]
+  rotationPeriod: Int
+  surfaceWater: Float
+  terrain: [String!]
+  updatedAt: DateTime!
+  _filmsMeta(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _residentsMeta(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+}
+
+input PlanetfilmsFilm {
+  director: String
+  episodeId: Int!
+  isPublished: Boolean
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String!
+  charactersIds: [ID!]
+  characters: [FilmcharactersPerson!]
+  planetsIds: [ID!]
+  planets: [FilmplanetsPlanet!]
+  speciesIds: [ID!]
+  species: [FilmspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [FilmstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [FilmvehiclesVehicle!]
+}
+
+input PlanetFilter {
+  AND: [PlanetFilter!]
+  OR: [PlanetFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  diameter: Int
+  diameter_not: Int
+  diameter_in: [Int!]
+  diameter_not_in: [Int!]
+  diameter_lt: Int
+  diameter_lte: Int
+  diameter_gt: Int
+  diameter_gte: Int
+  gravity: String
+  gravity_not: String
+  gravity_in: [String!]
+  gravity_not_in: [String!]
+  gravity_lt: String
+  gravity_lte: String
+  gravity_gt: String
+  gravity_gte: String
+  gravity_contains: String
+  gravity_not_contains: String
+  gravity_starts_with: String
+  gravity_not_starts_with: String
+  gravity_ends_with: String
+  gravity_not_ends_with: String
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  orbitalPeriod: Int
+  orbitalPeriod_not: Int
+  orbitalPeriod_in: [Int!]
+  orbitalPeriod_not_in: [Int!]
+  orbitalPeriod_lt: Int
+  orbitalPeriod_lte: Int
+  orbitalPeriod_gt: Int
+  orbitalPeriod_gte: Int
+  population: Float
+  population_not: Float
+  population_in: [Float!]
+  population_not_in: [Float!]
+  population_lt: Float
+  population_lte: Float
+  population_gt: Float
+  population_gte: Float
+  rotationPeriod: Int
+  rotationPeriod_not: Int
+  rotationPeriod_in: [Int!]
+  rotationPeriod_not_in: [Int!]
+  rotationPeriod_lt: Int
+  rotationPeriod_lte: Int
+  rotationPeriod_gt: Int
+  rotationPeriod_gte: Int
+  surfaceWater: Float
+  surfaceWater_not: Float
+  surfaceWater_in: [Float!]
+  surfaceWater_not_in: [Float!]
+  surfaceWater_lt: Float
+  surfaceWater_lte: Float
+  surfaceWater_gt: Float
+  surfaceWater_gte: Float
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  residents_every: PersonFilter
+  residents_some: PersonFilter
+  residents_none: PersonFilter
+}
+
+enum PlanetOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  diameter_ASC
+  diameter_DESC
+  gravity_ASC
+  gravity_DESC
+  id_ASC
+  id_DESC
+  isPublished_ASC
+  isPublished_DESC
+  name_ASC
+  name_DESC
+  orbitalPeriod_ASC
+  orbitalPeriod_DESC
+  population_ASC
+  population_DESC
+  rotationPeriod_ASC
+  rotationPeriod_DESC
+  surfaceWater_ASC
+  surfaceWater_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type PlanetPreviousValues {
+  climate: [String!]
+  createdAt: DateTime!
+  diameter: Int
+  gravity: String
+  id: ID!
+  isPublished: Boolean!
+  name: String!
+  orbitalPeriod: Int
+  population: Float
+  rotationPeriod: Int
+  surfaceWater: Float
+  terrain: [String!]
+  updatedAt: DateTime!
+}
+
+input PlanetresidentsPerson {
+  birthYear: String
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  isPublished: Boolean
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  filmsIds: [ID!]
+  films: [PersonfilmsFilm!]
+  speciesIds: [ID!]
+  species: [PersonspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [PersonstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [PersonvehiclesVehicle!]
+}
+
+input PlanetSubscriptionFilter {
+  AND: [PlanetSubscriptionFilter!]
+  OR: [PlanetSubscriptionFilter!]
+  mutation_in: [_ModelMutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: PlanetSubscriptionFilterNode
+}
+
+input PlanetSubscriptionFilterNode {
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  diameter: Int
+  diameter_not: Int
+  diameter_in: [Int!]
+  diameter_not_in: [Int!]
+  diameter_lt: Int
+  diameter_lte: Int
+  diameter_gt: Int
+  diameter_gte: Int
+  gravity: String
+  gravity_not: String
+  gravity_in: [String!]
+  gravity_not_in: [String!]
+  gravity_lt: String
+  gravity_lte: String
+  gravity_gt: String
+  gravity_gte: String
+  gravity_contains: String
+  gravity_not_contains: String
+  gravity_starts_with: String
+  gravity_not_starts_with: String
+  gravity_ends_with: String
+  gravity_not_ends_with: String
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  orbitalPeriod: Int
+  orbitalPeriod_not: Int
+  orbitalPeriod_in: [Int!]
+  orbitalPeriod_not_in: [Int!]
+  orbitalPeriod_lt: Int
+  orbitalPeriod_lte: Int
+  orbitalPeriod_gt: Int
+  orbitalPeriod_gte: Int
+  population: Float
+  population_not: Float
+  population_in: [Float!]
+  population_not_in: [Float!]
+  population_lt: Float
+  population_lte: Float
+  population_gt: Float
+  population_gte: Float
+  rotationPeriod: Int
+  rotationPeriod_not: Int
+  rotationPeriod_in: [Int!]
+  rotationPeriod_not_in: [Int!]
+  rotationPeriod_lt: Int
+  rotationPeriod_lte: Int
+  rotationPeriod_gt: Int
+  rotationPeriod_gte: Int
+  surfaceWater: Float
+  surfaceWater_not: Float
+  surfaceWater_in: [Float!]
+  surfaceWater_not_in: [Float!]
+  surfaceWater_lt: Float
+  surfaceWater_lte: Float
+  surfaceWater_gt: Float
+  surfaceWater_gte: Float
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  residents_every: PersonFilter
+  residents_some: PersonFilter
+  residents_none: PersonFilter
+}
+
+type PlanetSubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Planet
+  updatedFields: [String!]
+  previousValues: PlanetPreviousValues
+}
+
+type Query {
+  allAssets(
+    filter: AssetFilter
+    orderBy: AssetOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Asset!]!
+  allFilms(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Film!]!
+  allPersons(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Person!]!
+  allPlanets(
+    filter: PlanetFilter
+    orderBy: PlanetOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Planet!]!
+  allSpecies(
+    filter: SpeciesFilter
+    orderBy: SpeciesOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Species!]!
+  allStarships(
+    filter: StarshipFilter
+    orderBy: StarshipOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Starship!]!
+  allVehicles(
+    filter: VehicleFilter
+    orderBy: VehicleOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Vehicle!]!
+  _allAssetsMeta(
+    filter: AssetFilter
+    orderBy: AssetOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _allFilmsMeta(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _allPersonsMeta(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _allPlanetsMeta(
+    filter: PlanetFilter
+    orderBy: PlanetOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _allSpeciesMeta(
+    filter: SpeciesFilter
+    orderBy: SpeciesOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _allStarshipsMeta(
+    filter: StarshipFilter
+    orderBy: StarshipOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _allVehiclesMeta(
+    filter: VehicleFilter
+    orderBy: VehicleOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  Asset(id: ID): Asset
+  Film(
+    id: ID
+    title: String
+  ): Film
+  Person(
+    id: ID
+    name: String
+  ): Person
+  Planet(
+    id: ID
+    name: String
+  ): Planet
+  Species(
+    id: ID
+    name: String
+  ): Species
+  Starship(
+    id: ID
+    name: String
+  ): Starship
+  Vehicle(
+    id: ID
+    name: String
+  ): Vehicle
+  node(id: ID!): Node
+}
+
+type RemoveFromFilmPlanetsPayload {
+  filmsFilm: Film
+  planetsPlanet: Planet
+}
+
+type RemoveFromFilmSpeciesPayload {
+  filmsFilm: Film
+  speciesSpecies: Species
+}
+
+type RemoveFromFilmStarshipsPayload {
+  filmsFilm: Film
+  starshipsStarship: Starship
+}
+
+type RemoveFromFilmVehiclesPayload {
+  filmsFilm: Film
+  vehiclesVehicle: Vehicle
+}
+
+type RemoveFromPeopleFilmPayload {
+  charactersPerson: Person
+  filmsFilm: Film
+}
+
+type RemoveFromPeoplePlanetPayload {
+  residentsPerson: Person
+  homeworldPlanet: Planet
+}
+
+type RemoveFromPeopleSpeciesPayload {
+  peoplePerson: Person
+  speciesSpecies: Species
+}
+
+type RemoveFromPeopleStarshipsPayload {
+  pilotsPerson: Person
+  starshipsStarship: Starship
+}
+
+type RemoveFromPeopleVehiclesPayload {
+  pilotsPerson: Person
+  vehiclesVehicle: Vehicle
+}
+
+type Species implements Node {
+  averageHeight: Int
+  averageLifespan: Int
+  classification: String
+  createdAt: DateTime!
+  designation: String
+  eyeColor: [SPECIES_EYE_COLOR!]
+  films(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Film!]
+  hairColor: [SPECIES_HAIR_COLOR!]
+  id: ID!
+  isPublished: Boolean!
+  language: String
+  name: String!
+  people(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Person!]
+  skinColor: [SPECIES_SKIN_COLOR!]
+  updatedAt: DateTime!
+  _filmsMeta(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _peopleMeta(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+}
+
+enum SPECIES_EYE_COLOR {
+  AMBER
+  BLACK
+  BLUE
+  BROWN
+  GOLD
+  GREEN
+  GREY
+  HAZEL
+  INDIGO
+  ORANGE
+  PINK
+  RED
+  SILVER
+  UNKNOWN
+  YELLOW
+  GOLDEN
+}
+
+enum SPECIES_HAIR_COLOR {
+  UNKNOWN
+  BROWN
+  WHITE
+  RED
+  BLACK
+  BLONDE
+}
+
+enum SPECIES_SKIN_COLOR {
+  BLUE
+  BROWN
+  CAUCASIAN
+  DARK
+  GREEN
+  GREY
+  MAGENTA
+  ORANGE
+  PALE
+  PALEPINK
+  PEACH
+  PINK
+  PURPLE
+  RED
+  TAN
+  UNKNOWN
+  WHITE
+  YELLOW
+  BLACK
+  ASIAN
+  HISPANIC
+}
+
+input SpeciesfilmsFilm {
+  director: String
+  episodeId: Int!
+  isPublished: Boolean
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String!
+  charactersIds: [ID!]
+  characters: [FilmcharactersPerson!]
+  planetsIds: [ID!]
+  planets: [FilmplanetsPlanet!]
+  speciesIds: [ID!]
+  species: [FilmspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [FilmstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [FilmvehiclesVehicle!]
+}
+
+input SpeciesFilter {
+  AND: [SpeciesFilter!]
+  OR: [SpeciesFilter!]
+  averageHeight: Int
+  averageHeight_not: Int
+  averageHeight_in: [Int!]
+  averageHeight_not_in: [Int!]
+  averageHeight_lt: Int
+  averageHeight_lte: Int
+  averageHeight_gt: Int
+  averageHeight_gte: Int
+  averageLifespan: Int
+  averageLifespan_not: Int
+  averageLifespan_in: [Int!]
+  averageLifespan_not_in: [Int!]
+  averageLifespan_lt: Int
+  averageLifespan_lte: Int
+  averageLifespan_gt: Int
+  averageLifespan_gte: Int
+  classification: String
+  classification_not: String
+  classification_in: [String!]
+  classification_not_in: [String!]
+  classification_lt: String
+  classification_lte: String
+  classification_gt: String
+  classification_gte: String
+  classification_contains: String
+  classification_not_contains: String
+  classification_starts_with: String
+  classification_not_starts_with: String
+  classification_ends_with: String
+  classification_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  designation: String
+  designation_not: String
+  designation_in: [String!]
+  designation_not_in: [String!]
+  designation_lt: String
+  designation_lte: String
+  designation_gt: String
+  designation_gte: String
+  designation_contains: String
+  designation_not_contains: String
+  designation_starts_with: String
+  designation_not_starts_with: String
+  designation_ends_with: String
+  designation_not_ends_with: String
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  language: String
+  language_not: String
+  language_in: [String!]
+  language_not_in: [String!]
+  language_lt: String
+  language_lte: String
+  language_gt: String
+  language_gte: String
+  language_contains: String
+  language_not_contains: String
+  language_starts_with: String
+  language_not_starts_with: String
+  language_ends_with: String
+  language_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  people_every: PersonFilter
+  people_some: PersonFilter
+  people_none: PersonFilter
+}
+
+enum SpeciesOrderBy {
+  averageHeight_ASC
+  averageHeight_DESC
+  averageLifespan_ASC
+  averageLifespan_DESC
+  classification_ASC
+  classification_DESC
+  createdAt_ASC
+  createdAt_DESC
+  designation_ASC
+  designation_DESC
+  id_ASC
+  id_DESC
+  isPublished_ASC
+  isPublished_DESC
+  language_ASC
+  language_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input SpeciespeoplePerson {
+  birthYear: String
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  isPublished: Boolean
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  homeworldId: ID
+  homeworld: PersonhomeworldPlanet
+  filmsIds: [ID!]
+  films: [PersonfilmsFilm!]
+  speciesIds: [ID!]
+  species: [PersonspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [PersonstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [PersonvehiclesVehicle!]
+}
+
+type SpeciesPreviousValues {
+  averageHeight: Int
+  averageLifespan: Int
+  classification: String
+  createdAt: DateTime!
+  designation: String
+  eyeColor: [SPECIES_EYE_COLOR!]
+  hairColor: [SPECIES_HAIR_COLOR!]
+  id: ID!
+  isPublished: Boolean!
+  language: String
+  name: String!
+  skinColor: [SPECIES_SKIN_COLOR!]
+  updatedAt: DateTime!
+}
+
+input SpeciesSubscriptionFilter {
+  AND: [SpeciesSubscriptionFilter!]
+  OR: [SpeciesSubscriptionFilter!]
+  mutation_in: [_ModelMutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: SpeciesSubscriptionFilterNode
+}
+
+input SpeciesSubscriptionFilterNode {
+  averageHeight: Int
+  averageHeight_not: Int
+  averageHeight_in: [Int!]
+  averageHeight_not_in: [Int!]
+  averageHeight_lt: Int
+  averageHeight_lte: Int
+  averageHeight_gt: Int
+  averageHeight_gte: Int
+  averageLifespan: Int
+  averageLifespan_not: Int
+  averageLifespan_in: [Int!]
+  averageLifespan_not_in: [Int!]
+  averageLifespan_lt: Int
+  averageLifespan_lte: Int
+  averageLifespan_gt: Int
+  averageLifespan_gte: Int
+  classification: String
+  classification_not: String
+  classification_in: [String!]
+  classification_not_in: [String!]
+  classification_lt: String
+  classification_lte: String
+  classification_gt: String
+  classification_gte: String
+  classification_contains: String
+  classification_not_contains: String
+  classification_starts_with: String
+  classification_not_starts_with: String
+  classification_ends_with: String
+  classification_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  designation: String
+  designation_not: String
+  designation_in: [String!]
+  designation_not_in: [String!]
+  designation_lt: String
+  designation_lte: String
+  designation_gt: String
+  designation_gte: String
+  designation_contains: String
+  designation_not_contains: String
+  designation_starts_with: String
+  designation_not_starts_with: String
+  designation_ends_with: String
+  designation_not_ends_with: String
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  language: String
+  language_not: String
+  language_in: [String!]
+  language_not_in: [String!]
+  language_lt: String
+  language_lte: String
+  language_gt: String
+  language_gte: String
+  language_contains: String
+  language_not_contains: String
+  language_starts_with: String
+  language_not_starts_with: String
+  language_ends_with: String
+  language_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  people_every: PersonFilter
+  people_some: PersonFilter
+  people_none: PersonFilter
+}
+
+type SpeciesSubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Species
+  updatedFields: [String!]
+  previousValues: SpeciesPreviousValues
+}
+
+type Starship implements Node {
+  cargoCapacity: Float
+  class: String
+  consumables: String
+  costInCredits: Float
+  createdAt: DateTime!
+  crew: Int
+  films(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Film!]
+  hyperdriveRating: Float
+  id: ID!
+  isPublished: Boolean!
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  mglt: Int
+  name: String!
+  passengers: Int
+  pilots(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Person!]
+  updatedAt: DateTime!
+  _filmsMeta(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _pilotsMeta(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+}
+
+input StarshipfilmsFilm {
+  director: String
+  episodeId: Int!
+  isPublished: Boolean
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String!
+  charactersIds: [ID!]
+  characters: [FilmcharactersPerson!]
+  planetsIds: [ID!]
+  planets: [FilmplanetsPlanet!]
+  speciesIds: [ID!]
+  species: [FilmspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [FilmstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [FilmvehiclesVehicle!]
+}
+
+input StarshipFilter {
+  AND: [StarshipFilter!]
+  OR: [StarshipFilter!]
+  cargoCapacity: Float
+  cargoCapacity_not: Float
+  cargoCapacity_in: [Float!]
+  cargoCapacity_not_in: [Float!]
+  cargoCapacity_lt: Float
+  cargoCapacity_lte: Float
+  cargoCapacity_gt: Float
+  cargoCapacity_gte: Float
+  class: String
+  class_not: String
+  class_in: [String!]
+  class_not_in: [String!]
+  class_lt: String
+  class_lte: String
+  class_gt: String
+  class_gte: String
+  class_contains: String
+  class_not_contains: String
+  class_starts_with: String
+  class_not_starts_with: String
+  class_ends_with: String
+  class_not_ends_with: String
+  consumables: String
+  consumables_not: String
+  consumables_in: [String!]
+  consumables_not_in: [String!]
+  consumables_lt: String
+  consumables_lte: String
+  consumables_gt: String
+  consumables_gte: String
+  consumables_contains: String
+  consumables_not_contains: String
+  consumables_starts_with: String
+  consumables_not_starts_with: String
+  consumables_ends_with: String
+  consumables_not_ends_with: String
+  costInCredits: Float
+  costInCredits_not: Float
+  costInCredits_in: [Float!]
+  costInCredits_not_in: [Float!]
+  costInCredits_lt: Float
+  costInCredits_lte: Float
+  costInCredits_gt: Float
+  costInCredits_gte: Float
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  crew: Int
+  crew_not: Int
+  crew_in: [Int!]
+  crew_not_in: [Int!]
+  crew_lt: Int
+  crew_lte: Int
+  crew_gt: Int
+  crew_gte: Int
+  hyperdriveRating: Float
+  hyperdriveRating_not: Float
+  hyperdriveRating_in: [Float!]
+  hyperdriveRating_not_in: [Float!]
+  hyperdriveRating_lt: Float
+  hyperdriveRating_lte: Float
+  hyperdriveRating_gt: Float
+  hyperdriveRating_gte: Float
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  length: Float
+  length_not: Float
+  length_in: [Float!]
+  length_not_in: [Float!]
+  length_lt: Float
+  length_lte: Float
+  length_gt: Float
+  length_gte: Float
+  maxAtmospheringSpeed: Int
+  maxAtmospheringSpeed_not: Int
+  maxAtmospheringSpeed_in: [Int!]
+  maxAtmospheringSpeed_not_in: [Int!]
+  maxAtmospheringSpeed_lt: Int
+  maxAtmospheringSpeed_lte: Int
+  maxAtmospheringSpeed_gt: Int
+  maxAtmospheringSpeed_gte: Int
+  mglt: Int
+  mglt_not: Int
+  mglt_in: [Int!]
+  mglt_not_in: [Int!]
+  mglt_lt: Int
+  mglt_lte: Int
+  mglt_gt: Int
+  mglt_gte: Int
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  passengers: Int
+  passengers_not: Int
+  passengers_in: [Int!]
+  passengers_not_in: [Int!]
+  passengers_lt: Int
+  passengers_lte: Int
+  passengers_gt: Int
+  passengers_gte: Int
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  pilots_every: PersonFilter
+  pilots_some: PersonFilter
+  pilots_none: PersonFilter
+}
+
+enum StarshipOrderBy {
+  cargoCapacity_ASC
+  cargoCapacity_DESC
+  class_ASC
+  class_DESC
+  consumables_ASC
+  consumables_DESC
+  costInCredits_ASC
+  costInCredits_DESC
+  createdAt_ASC
+  createdAt_DESC
+  crew_ASC
+  crew_DESC
+  hyperdriveRating_ASC
+  hyperdriveRating_DESC
+  id_ASC
+  id_DESC
+  isPublished_ASC
+  isPublished_DESC
+  length_ASC
+  length_DESC
+  maxAtmospheringSpeed_ASC
+  maxAtmospheringSpeed_DESC
+  mglt_ASC
+  mglt_DESC
+  name_ASC
+  name_DESC
+  passengers_ASC
+  passengers_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input StarshippilotsPerson {
+  birthYear: String
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  isPublished: Boolean
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  homeworldId: ID
+  homeworld: PersonhomeworldPlanet
+  filmsIds: [ID!]
+  films: [PersonfilmsFilm!]
+  speciesIds: [ID!]
+  species: [PersonspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [PersonstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [PersonvehiclesVehicle!]
+}
+
+type StarshipPreviousValues {
+  cargoCapacity: Float
+  class: String
+  consumables: String
+  costInCredits: Float
+  createdAt: DateTime!
+  crew: Int
+  hyperdriveRating: Float
+  id: ID!
+  isPublished: Boolean!
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  mglt: Int
+  name: String!
+  passengers: Int
+  updatedAt: DateTime!
+}
+
+input StarshipSubscriptionFilter {
+  AND: [StarshipSubscriptionFilter!]
+  OR: [StarshipSubscriptionFilter!]
+  mutation_in: [_ModelMutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: StarshipSubscriptionFilterNode
+}
+
+input StarshipSubscriptionFilterNode {
+  cargoCapacity: Float
+  cargoCapacity_not: Float
+  cargoCapacity_in: [Float!]
+  cargoCapacity_not_in: [Float!]
+  cargoCapacity_lt: Float
+  cargoCapacity_lte: Float
+  cargoCapacity_gt: Float
+  cargoCapacity_gte: Float
+  class: String
+  class_not: String
+  class_in: [String!]
+  class_not_in: [String!]
+  class_lt: String
+  class_lte: String
+  class_gt: String
+  class_gte: String
+  class_contains: String
+  class_not_contains: String
+  class_starts_with: String
+  class_not_starts_with: String
+  class_ends_with: String
+  class_not_ends_with: String
+  consumables: String
+  consumables_not: String
+  consumables_in: [String!]
+  consumables_not_in: [String!]
+  consumables_lt: String
+  consumables_lte: String
+  consumables_gt: String
+  consumables_gte: String
+  consumables_contains: String
+  consumables_not_contains: String
+  consumables_starts_with: String
+  consumables_not_starts_with: String
+  consumables_ends_with: String
+  consumables_not_ends_with: String
+  costInCredits: Float
+  costInCredits_not: Float
+  costInCredits_in: [Float!]
+  costInCredits_not_in: [Float!]
+  costInCredits_lt: Float
+  costInCredits_lte: Float
+  costInCredits_gt: Float
+  costInCredits_gte: Float
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  crew: Int
+  crew_not: Int
+  crew_in: [Int!]
+  crew_not_in: [Int!]
+  crew_lt: Int
+  crew_lte: Int
+  crew_gt: Int
+  crew_gte: Int
+  hyperdriveRating: Float
+  hyperdriveRating_not: Float
+  hyperdriveRating_in: [Float!]
+  hyperdriveRating_not_in: [Float!]
+  hyperdriveRating_lt: Float
+  hyperdriveRating_lte: Float
+  hyperdriveRating_gt: Float
+  hyperdriveRating_gte: Float
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  length: Float
+  length_not: Float
+  length_in: [Float!]
+  length_not_in: [Float!]
+  length_lt: Float
+  length_lte: Float
+  length_gt: Float
+  length_gte: Float
+  maxAtmospheringSpeed: Int
+  maxAtmospheringSpeed_not: Int
+  maxAtmospheringSpeed_in: [Int!]
+  maxAtmospheringSpeed_not_in: [Int!]
+  maxAtmospheringSpeed_lt: Int
+  maxAtmospheringSpeed_lte: Int
+  maxAtmospheringSpeed_gt: Int
+  maxAtmospheringSpeed_gte: Int
+  mglt: Int
+  mglt_not: Int
+  mglt_in: [Int!]
+  mglt_not_in: [Int!]
+  mglt_lt: Int
+  mglt_lte: Int
+  mglt_gt: Int
+  mglt_gte: Int
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  passengers: Int
+  passengers_not: Int
+  passengers_in: [Int!]
+  passengers_not_in: [Int!]
+  passengers_lt: Int
+  passengers_lte: Int
+  passengers_gt: Int
+  passengers_gte: Int
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  pilots_every: PersonFilter
+  pilots_some: PersonFilter
+  pilots_none: PersonFilter
+}
+
+type StarshipSubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Starship
+  updatedFields: [String!]
+  previousValues: StarshipPreviousValues
+}
+
+type Subscription {
+  Asset(filter: AssetSubscriptionFilter): AssetSubscriptionPayload
+  Film(filter: FilmSubscriptionFilter): FilmSubscriptionPayload
+  Person(filter: PersonSubscriptionFilter): PersonSubscriptionPayload
+  Planet(filter: PlanetSubscriptionFilter): PlanetSubscriptionPayload
+  Species(filter: SpeciesSubscriptionFilter): SpeciesSubscriptionPayload
+  Starship(filter: StarshipSubscriptionFilter): StarshipSubscriptionPayload
+  Vehicle(filter: VehicleSubscriptionFilter): VehicleSubscriptionPayload
+}
+
+input UpdateAsset {
+  fileName: String
+  handle: String
+  height: Float
+  id: ID!
+  mimeType: String
+  size: Float
+  url: String
+  width: Float
+}
+
+input UpdateFilm {
+  director: String
+  episodeId: Int
+  id: ID!
+  isPublished: Boolean
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String
+  charactersIds: [ID!]
+  characters: [FilmcharactersPerson!]
+  planetsIds: [ID!]
+  planets: [FilmplanetsPlanet!]
+  speciesIds: [ID!]
+  species: [FilmspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [FilmstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [FilmvehiclesVehicle!]
+}
+
+input UpdatePerson {
+  birthYear: String
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  id: ID!
+  isPublished: Boolean
+  mass: Float
+  name: String
+  skinColor: [PERSON_SKIN_COLOR!]
+  homeworldId: ID
+  homeworld: PersonhomeworldPlanet
+  filmsIds: [ID!]
+  films: [PersonfilmsFilm!]
+  speciesIds: [ID!]
+  species: [PersonspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [PersonstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [PersonvehiclesVehicle!]
+}
+
+input UpdatePlanet {
+  climate: [String!]
+  diameter: Int
+  gravity: String
+  id: ID!
+  isPublished: Boolean
+  name: String
+  orbitalPeriod: Int
+  population: Float
+  rotationPeriod: Int
+  surfaceWater: Float
+  terrain: [String!]
+  filmsIds: [ID!]
+  films: [PlanetfilmsFilm!]
+  residentsIds: [ID!]
+  residents: [PlanetresidentsPerson!]
+}
+
+input UpdateSpecies {
+  averageHeight: Int
+  averageLifespan: Int
+  classification: String
+  designation: String
+  eyeColor: [SPECIES_EYE_COLOR!]
+  hairColor: [SPECIES_HAIR_COLOR!]
+  id: ID!
+  isPublished: Boolean
+  language: String
+  name: String
+  skinColor: [SPECIES_SKIN_COLOR!]
+  filmsIds: [ID!]
+  films: [SpeciesfilmsFilm!]
+  peopleIds: [ID!]
+  people: [SpeciespeoplePerson!]
+}
+
+input UpdateStarship {
+  cargoCapacity: Float
+  class: String
+  consumables: String
+  costInCredits: Float
+  crew: Int
+  hyperdriveRating: Float
+  id: ID!
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  mglt: Int
+  name: String
+  passengers: Int
+  filmsIds: [ID!]
+  films: [StarshipfilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [StarshippilotsPerson!]
+}
+
+input UpdateVehicle {
+  cargoCapacity: Int
+  class: String
+  consumables: String
+  costInCredits: Int
+  crew: Int
+  id: ID!
+  isPublished: Boolean
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  model: String
+  name: String
+  passengers: Int
+  filmsIds: [ID!]
+  films: [VehiclefilmsFilm!]
+  pilotsIds: [ID!]
+  pilots: [VehiclepilotsPerson!]
+}
+
+type Vehicle implements Node {
+  cargoCapacity: Int
+  class: String
+  consumables: String
+  costInCredits: Int
+  createdAt: DateTime!
+  crew: Int
+  films(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Film!]
+  id: ID!
+  isPublished: Boolean!
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  model: String
+  name: String!
+  passengers: Int
+  pilots(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Person!]
+  updatedAt: DateTime!
+  _filmsMeta(
+    filter: FilmFilter
+    orderBy: FilmOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+  _pilotsMeta(
+    filter: PersonFilter
+    orderBy: PersonOrderBy
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): _QueryMeta!
+}
+
+input VehiclefilmsFilm {
+  director: String
+  episodeId: Int!
+  isPublished: Boolean
+  openingCrawl: String
+  producers: [String!]
+  releaseDate: DateTime
+  title: String!
+  charactersIds: [ID!]
+  characters: [FilmcharactersPerson!]
+  planetsIds: [ID!]
+  planets: [FilmplanetsPlanet!]
+  speciesIds: [ID!]
+  species: [FilmspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [FilmstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [FilmvehiclesVehicle!]
+}
+
+input VehicleFilter {
+  AND: [VehicleFilter!]
+  OR: [VehicleFilter!]
+  cargoCapacity: Int
+  cargoCapacity_not: Int
+  cargoCapacity_in: [Int!]
+  cargoCapacity_not_in: [Int!]
+  cargoCapacity_lt: Int
+  cargoCapacity_lte: Int
+  cargoCapacity_gt: Int
+  cargoCapacity_gte: Int
+  class: String
+  class_not: String
+  class_in: [String!]
+  class_not_in: [String!]
+  class_lt: String
+  class_lte: String
+  class_gt: String
+  class_gte: String
+  class_contains: String
+  class_not_contains: String
+  class_starts_with: String
+  class_not_starts_with: String
+  class_ends_with: String
+  class_not_ends_with: String
+  consumables: String
+  consumables_not: String
+  consumables_in: [String!]
+  consumables_not_in: [String!]
+  consumables_lt: String
+  consumables_lte: String
+  consumables_gt: String
+  consumables_gte: String
+  consumables_contains: String
+  consumables_not_contains: String
+  consumables_starts_with: String
+  consumables_not_starts_with: String
+  consumables_ends_with: String
+  consumables_not_ends_with: String
+  costInCredits: Int
+  costInCredits_not: Int
+  costInCredits_in: [Int!]
+  costInCredits_not_in: [Int!]
+  costInCredits_lt: Int
+  costInCredits_lte: Int
+  costInCredits_gt: Int
+  costInCredits_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  crew: Int
+  crew_not: Int
+  crew_in: [Int!]
+  crew_not_in: [Int!]
+  crew_lt: Int
+  crew_lte: Int
+  crew_gt: Int
+  crew_gte: Int
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  length: Float
+  length_not: Float
+  length_in: [Float!]
+  length_not_in: [Float!]
+  length_lt: Float
+  length_lte: Float
+  length_gt: Float
+  length_gte: Float
+  maxAtmospheringSpeed: Int
+  maxAtmospheringSpeed_not: Int
+  maxAtmospheringSpeed_in: [Int!]
+  maxAtmospheringSpeed_not_in: [Int!]
+  maxAtmospheringSpeed_lt: Int
+  maxAtmospheringSpeed_lte: Int
+  maxAtmospheringSpeed_gt: Int
+  maxAtmospheringSpeed_gte: Int
+  model: String
+  model_not: String
+  model_in: [String!]
+  model_not_in: [String!]
+  model_lt: String
+  model_lte: String
+  model_gt: String
+  model_gte: String
+  model_contains: String
+  model_not_contains: String
+  model_starts_with: String
+  model_not_starts_with: String
+  model_ends_with: String
+  model_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  passengers: Int
+  passengers_not: Int
+  passengers_in: [Int!]
+  passengers_not_in: [Int!]
+  passengers_lt: Int
+  passengers_lte: Int
+  passengers_gt: Int
+  passengers_gte: Int
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  pilots_every: PersonFilter
+  pilots_some: PersonFilter
+  pilots_none: PersonFilter
+}
+
+enum VehicleOrderBy {
+  cargoCapacity_ASC
+  cargoCapacity_DESC
+  class_ASC
+  class_DESC
+  consumables_ASC
+  consumables_DESC
+  costInCredits_ASC
+  costInCredits_DESC
+  createdAt_ASC
+  createdAt_DESC
+  crew_ASC
+  crew_DESC
+  id_ASC
+  id_DESC
+  isPublished_ASC
+  isPublished_DESC
+  length_ASC
+  length_DESC
+  maxAtmospheringSpeed_ASC
+  maxAtmospheringSpeed_DESC
+  model_ASC
+  model_DESC
+  name_ASC
+  name_DESC
+  passengers_ASC
+  passengers_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input VehiclepilotsPerson {
+  birthYear: String
+  eyeColor: [PERSON_EYE_COLOR!]
+  gender: PERSON_GENDER
+  hairColor: [PERSON_HAIR_COLOR!]
+  height: Int
+  isPublished: Boolean
+  mass: Float
+  name: String!
+  skinColor: [PERSON_SKIN_COLOR!]
+  homeworldId: ID
+  homeworld: PersonhomeworldPlanet
+  filmsIds: [ID!]
+  films: [PersonfilmsFilm!]
+  speciesIds: [ID!]
+  species: [PersonspeciesSpecies!]
+  starshipsIds: [ID!]
+  starships: [PersonstarshipsStarship!]
+  vehiclesIds: [ID!]
+  vehicles: [PersonvehiclesVehicle!]
+}
+
+type VehiclePreviousValues {
+  cargoCapacity: Int
+  class: String
+  consumables: String
+  costInCredits: Int
+  createdAt: DateTime!
+  crew: Int
+  id: ID!
+  isPublished: Boolean!
+  length: Float
+  manufacturer: [String!]
+  maxAtmospheringSpeed: Int
+  model: String
+  name: String!
+  passengers: Int
+  updatedAt: DateTime!
+}
+
+input VehicleSubscriptionFilter {
+  AND: [VehicleSubscriptionFilter!]
+  OR: [VehicleSubscriptionFilter!]
+  mutation_in: [_ModelMutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: VehicleSubscriptionFilterNode
+}
+
+input VehicleSubscriptionFilterNode {
+  cargoCapacity: Int
+  cargoCapacity_not: Int
+  cargoCapacity_in: [Int!]
+  cargoCapacity_not_in: [Int!]
+  cargoCapacity_lt: Int
+  cargoCapacity_lte: Int
+  cargoCapacity_gt: Int
+  cargoCapacity_gte: Int
+  class: String
+  class_not: String
+  class_in: [String!]
+  class_not_in: [String!]
+  class_lt: String
+  class_lte: String
+  class_gt: String
+  class_gte: String
+  class_contains: String
+  class_not_contains: String
+  class_starts_with: String
+  class_not_starts_with: String
+  class_ends_with: String
+  class_not_ends_with: String
+  consumables: String
+  consumables_not: String
+  consumables_in: [String!]
+  consumables_not_in: [String!]
+  consumables_lt: String
+  consumables_lte: String
+  consumables_gt: String
+  consumables_gte: String
+  consumables_contains: String
+  consumables_not_contains: String
+  consumables_starts_with: String
+  consumables_not_starts_with: String
+  consumables_ends_with: String
+  consumables_not_ends_with: String
+  costInCredits: Int
+  costInCredits_not: Int
+  costInCredits_in: [Int!]
+  costInCredits_not_in: [Int!]
+  costInCredits_lt: Int
+  costInCredits_lte: Int
+  costInCredits_gt: Int
+  costInCredits_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  crew: Int
+  crew_not: Int
+  crew_in: [Int!]
+  crew_not_in: [Int!]
+  crew_lt: Int
+  crew_lte: Int
+  crew_gt: Int
+  crew_gte: Int
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  isPublished: Boolean
+  isPublished_not: Boolean
+  length: Float
+  length_not: Float
+  length_in: [Float!]
+  length_not_in: [Float!]
+  length_lt: Float
+  length_lte: Float
+  length_gt: Float
+  length_gte: Float
+  maxAtmospheringSpeed: Int
+  maxAtmospheringSpeed_not: Int
+  maxAtmospheringSpeed_in: [Int!]
+  maxAtmospheringSpeed_not_in: [Int!]
+  maxAtmospheringSpeed_lt: Int
+  maxAtmospheringSpeed_lte: Int
+  maxAtmospheringSpeed_gt: Int
+  maxAtmospheringSpeed_gte: Int
+  model: String
+  model_not: String
+  model_in: [String!]
+  model_not_in: [String!]
+  model_lt: String
+  model_lte: String
+  model_gt: String
+  model_gte: String
+  model_contains: String
+  model_not_contains: String
+  model_starts_with: String
+  model_not_starts_with: String
+  model_ends_with: String
+  model_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  passengers: Int
+  passengers_not: Int
+  passengers_in: [Int!]
+  passengers_not_in: [Int!]
+  passengers_lt: Int
+  passengers_lte: Int
+  passengers_gt: Int
+  passengers_gte: Int
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  films_every: FilmFilter
+  films_some: FilmFilter
+  films_none: FilmFilter
+  pilots_every: PersonFilter
+  pilots_some: PersonFilter
+  pilots_none: PersonFilter
+}
+
+type VehicleSubscriptionPayload {
+  mutation: _ModelMutationType!
+  node: Vehicle
+  updatedFields: [String!]
+  previousValues: VehiclePreviousValues
+}
+
