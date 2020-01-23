@@ -55,6 +55,8 @@ lazy val common = project
 
       outDir.mkdirs()
 
+      // https://github.com/apollographql/apollo-tooling#apollo-clientcodegen-output
+      // https://www.apollographql.com/docs/devtools/apollo-config/#client-projects
       Seq(
         apollo.toString, "client:codegen",
         "--config", config.toString,
