@@ -22,6 +22,7 @@ object AppState {
   implicit private lazy val csIO: ContextShift[IO] = IO.contextShift(global)
 
   lazy val swapiClient = AjaxIOGraphQLClient("https://api.graph.cool/simple/v1/swapi")
+  lazy val todoClient = AjaxIOGraphQLClient("https://todo-mongo-graphql-server.herokuapp.com/")
 
   lazy val rootModel = Model[IO, RootModel](RootModel(target = Some(Target.M81)))
 }
