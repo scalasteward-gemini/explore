@@ -7,6 +7,6 @@ import explore.model._
 import cats.effect._
 
 object Actions {
-  implicit object TargetActionsIO extends TargetActionsInterpreter[IO](Views.target)
-  implicit object PersonsActionsIO extends PersonsActionsInterpreter[IO](Views.persons)
+  //implicit object TargetActionsIO extends TargetActionsInterpreter[IO](Views.target)
+  implicit object PersonsActionsIO extends PersonsActionsInterpreter[IO]//(Views.persons)
 }
