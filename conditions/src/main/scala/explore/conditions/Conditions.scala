@@ -18,7 +18,7 @@ import cats.effect._
 object Conditions {
   private def renderButton(forTarget: Target, selected: Option[Target]) = {
     val color = selected.filter(_ == forTarget).map(_ => Blue).orUndefined
-    Button(onClick = Views.target.set(forTarget), color = color)(forTarget.toString)
+    Button(onClick = Views.target.set(Some(forTarget)), color = color)(forTarget.toString)
   }
 
   private def retrievePersons(): IO[Unit] = {

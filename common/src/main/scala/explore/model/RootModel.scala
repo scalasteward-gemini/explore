@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext.global
 
 @Lenses
 case class RootModel(
-  target: Target,
+  target: Option[Target] = None,
   persons: List[TestQuery.AllPersons] = List.empty
 )
 
@@ -23,5 +23,5 @@ object AppState {
 
   lazy val swapiClient = AjaxIOGraphQLClient("https://api.graph.cool/simple/v1/swapi")
 
-  lazy val rootModel = Model[IO, RootModel](RootModel(Target.M81))
+  lazy val rootModel = Model[IO, RootModel](RootModel(target = Some(Target.M81)))
 }

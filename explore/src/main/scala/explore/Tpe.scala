@@ -29,8 +29,8 @@ object Tpe {
         <.div(
           ^.height := 28.pc
         )(
-          Views.persons.flow { personsOpt =>
-            <.div(personsOpt.toString)
+          Views.persons.flow { persons =>
+            <.div(persons.toString)
           }
         )
       }
