@@ -7,8 +7,8 @@ import io.circe.generic.semiauto.{ deriveDecoder, deriveEncoder }
 
 object SaveMutation extends GraphQLQuery {
   val document = """
-  mutation SaveMutation($$taskId: String!, $$title: String!) {
-    save(id: $$taskId, title: $$title) {
+  mutation SaveMutation($taskId: String!, $title: String!) {
+    save(id: $taskId, title: $title) {
       id
       title
       completed

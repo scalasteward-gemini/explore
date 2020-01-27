@@ -18,7 +18,7 @@ object AllTasksQuery extends GraphQLQuery {
   case class Variables()
   object Variables { implicit val jsonEncoder: Encoder[Variables] = deriveEncoder[Variables] }
 
-  case class Data(todos: Option[List[Task]])
+  case class Data(todos: List[Task])
   object Data { implicit val jsonDecoder: Decoder[Data] = deriveDecoder[Data] }
 
   implicit val varEncoder: Encoder[Variables] = Variables.jsonEncoder

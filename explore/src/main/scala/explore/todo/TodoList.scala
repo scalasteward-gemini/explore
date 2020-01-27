@@ -1,15 +1,15 @@
 package explore.todo
 
 import explore.model.Task
-// import cats.effect.IO
+import cats.effect.IO
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import react.common.ReactProps
-// import crystal.react.io.implicits._
+import crystal.react.io.implicits._
 
 final case class TodoList(
   items: List[Task],
-//   stateChange: TodoItem => IO[Unit],
+  toggle: String => IO[Unit],
 //   editItem: TodoItem => IO[Unit],
 //   deleteItem: TodoItem => IO[Unit]
 ) extends ReactProps {
@@ -33,7 +33,7 @@ object TodoList {
         //   case TodoHigh => style.itemOpt(CommonStyle.danger)
         // }
         <.li(/*itemStyle,*/
-          <.input.checkbox(^.checked := item.completed/*, ^.onChange --> p.stateChange(item.copy(completed = !item.completed))*/),
+          <.input.checkbox(^.checked := item.completed, ^.readOnly := true, ^.onClick --> p.toggle(item.id)),
           <.span(" "),
           if (item.completed) <.s(item.title) else <.span(item.title),
         //   Button(p.editItem(item), addStyles = Seq(bss.pullRight, bss.buttonXS))("Edit"),

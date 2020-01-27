@@ -7,8 +7,8 @@ import io.circe.generic.semiauto.{ deriveDecoder, deriveEncoder }
 
 object ToggleMutation extends GraphQLQuery {
   val document = """
-      mutation ToggleMutation($$taskId: String!) {
-        toggle(id: $$taskId) {
+      mutation ToggleMutation($taskId: String!) {
+        toggle(id: $taskId) {
           id
           title
           completed

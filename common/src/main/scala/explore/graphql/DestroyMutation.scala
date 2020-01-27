@@ -7,8 +7,8 @@ import io.circe.generic.semiauto.{ deriveDecoder, deriveEncoder }
 
 object DestroyMutation extends GraphQLQuery {
   val document = """
-      mutation DestroyMutation($$taskId: String!) {
-        destroy(id: $$taskId) {
+      mutation DestroyMutation($taskId: String!) {
+        destroy(id: $taskId) {
           id
           title
           completed

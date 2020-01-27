@@ -1,18 +1,12 @@
 package explore.todo
 /*
-import cats.effect.IO
 import diode.react.ReactPot._
 import diode.data.Pot
-import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.html_<^._
-import react.common.ReactProps
 import spatutorial.client.components.Bootstrap._
 import spatutorial.client.components._
 import spatutorial.client.logger._
 import spatutorial.client.services._
 import spatutorial.shared._
-import crystal._
-import crystal.react.io.implicits._
 import scalacss.ScalaCssReact._
 import spatutorial.client.services.Algebras._
 
@@ -20,17 +14,43 @@ final case class Todo(view: View[IO, Pot[Todos]]) extends ReactProps {
   @inline def render: VdomElement = Todo.component(this)
 }
 */
-object Todo {
-/*  type Props = Todo
 
-  case class State(selectedItem: Option[TodoItem] = None, showTodoForm: Boolean = false)
+import cats.effect.IO
+import react.common.ReactProps
+import crystal._
+import crystal.react.io.implicits._
+import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.html_<^._
+import explore.model.Task
+import explore.model.TodoListActions
+import explore.model.Actions._
+
+final case class Todo(view: View[IO, List[Task]]) extends ReactProps {
+  @inline def render: VdomElement = Todo.component(this)
+}
+
+
+object Todo {
+  type Props = Todo
+
+  case class State(selectedItem: Option[Task] = None, showTodoForm: Boolean = false)
 
   class Backend($: BackendScope[Props, State]) {
+      println($)
+
+    private def actions(props: Props) = props.view.actions[TodoListActions]
+
     def mounted(props: Props) =
       // dispatch a message to refresh the todos, which will cause TodoStore to fetch todos from the server
-      props.view.algebra[TodosAlgebra].refreshTodos()
-          .when(props.view.get.map(_.isEmpty))
+      actions(props).refresh().when(props.view.get.map(_.isEmpty))
 
+    def toggle(props: Props)(id: String): IO[Unit] =
+        for{
+            _ <- actions(props).toggle(id)
+            _ <- actions(props).refresh()
+        } yield ()
+
+/*
     def editTodo(item: Option[TodoItem]) =
     // activate the edit dialog
       $.modStateIO(s => s.copy(selectedItem = item, showTodoForm = true))
@@ -50,9 +70,13 @@ object Todo {
       }
       // hide the edit dialog, chain IOs
       io.flatMap(_ => $.modStateIO(s => s.copy(showTodoForm = false)))
-    }
+    }*/
 
     def render(p: Props, s: State) =
+    <.div($.toString, s.toString(),
+    p.view.flow{ tasks => TodoList(tasks, toggle(p))} 
+    )
+    /*
       Panel("What needs to be done")(
         p.view.flow { todosOpt =>
           val todos = Pot.fromOption(todosOpt).flatten
@@ -72,6 +96,7 @@ object Todo {
         if (s.showTodoForm) TodoForm(s.selectedItem, todoEdited)
         else // otherwise add an empty placeholder
           VdomArray.empty())
+          */
   }
 
   // create the React component for To Do management
@@ -80,7 +105,6 @@ object Todo {
     .renderBackend[Backend]
     .componentDidMount(scope => scope.backend.mounted(scope.props))
     .build
-    */
 }
 
 /*
