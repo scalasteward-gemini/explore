@@ -25,5 +25,6 @@ object ClearCompletedMutation extends GraphQLQuery {
     implicit val jsonEncoder: Encoder[ClearedTasks] = deriveEncoder[ClearedTasks]    
   }
 
-  implicit val jsonDecoder: Decoder[Response] = deriveDecoder[Response]
+  implicit val varEncoder: Encoder[Variables] = Variables.jsonEncoder
+  implicit val dataDecoder: Decoder[Data] = Data.jsonDecoder
 }

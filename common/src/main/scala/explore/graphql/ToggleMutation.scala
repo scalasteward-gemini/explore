@@ -21,5 +21,6 @@ object ToggleMutation extends GraphQLQuery {
   case class Data(toggle: Option[Task])
   object Data { implicit val jsonDecoder: Decoder[Data] = deriveDecoder[Data] }
 
-  implicit val jsonDecoder: Decoder[Response] = deriveDecoder[Response]
+  implicit val varEncoder: Encoder[Variables] = Variables.jsonEncoder
+  implicit val dataDecoder: Decoder[Data] = Data.jsonDecoder
 }
