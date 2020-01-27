@@ -1,6 +1,8 @@
 package explore.graphql.client
 
-trait GraphQLClient[F[_]] {
+import cats.effect._
+
+trait GraphQLClient {
   val uri: String
-  def query(query: GraphQLQuery)(variables: Option[query.Variables]): F[query.Data]
+  def query[F[_] : LiftIO](query: GraphQLQuery)(variables: Option[query.Variables]): F[query.Data]
 }
