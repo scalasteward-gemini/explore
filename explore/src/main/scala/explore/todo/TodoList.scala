@@ -32,8 +32,8 @@ object TodoList {
         //   case TodoNormal => style.item
         //   case TodoHigh => style.itemOpt(CommonStyle.danger)
         // }
-        <.li(/*itemStyle,*/
-          <.input.checkbox(^.checked := item.completed, ^.readOnly := true, ^.onClick --> p.toggle(item.id)),
+        <.li(/*itemStyle,*/ 
+          <.input.checkbox(^.checked := item.completed, ^.onChange --> p.toggle(item.id)),
           <.span(" "),
           if (item.completed) <.s(item.title) else <.span(item.title),
         //   Button(p.editItem(item), addStyles = Seq(bss.pullRight, bss.buttonXS))("Edit"),
