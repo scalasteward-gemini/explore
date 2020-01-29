@@ -14,6 +14,9 @@ import org.scalajs.dom.raw.Event
 import org.scalajs.dom.raw.MessageEvent
 import cats.effect.concurrent.Deferred
 
+// This implementation follows the Apollo protocol, specified in:
+// https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md
+// Also see: https://medium.com/@rob.blackbourn/writing-a-graphql-websocket-subscriber-in-javascript-4451abb9cd60
 case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) extends GraphQLStreamingClient {
 
     type Subscription[F[_], D] = WebSocketSubscription[F, D]
