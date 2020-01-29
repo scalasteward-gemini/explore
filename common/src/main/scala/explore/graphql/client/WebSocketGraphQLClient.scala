@@ -15,6 +15,18 @@ import org.scalajs.dom.raw.MessageEvent
 import cats.effect.concurrent.Deferred
 
 case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) extends GraphQLStreamingClient {
+
+    type Subscription[F[_], D] = WebSocketSubscription[F, D]
+
+    case class WebSocketSubscription[F[_] : LiftIO, D](stream: Stream[F, D], private val id: String) extends Stoppable[F] {
+        def stop: F[Unit] = {
+            LiftIO[F].liftIO(client.get.map{sender => 
+                subscriptions -= id
+                sender.send(Stop(id))
+            })
+        }
+    }
+
     private trait Emitter {
         def emitData(json: Json): Unit
     }
@@ -75,14 +87,14 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
         }
     }
 
-    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): F[Stream[F, D]] = {
+    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): F[Subscription[F, D]] = {
         for {
             idq <- buildQueue[F, D]
             (id, q) = idq
             sender <- LiftIO[F].liftIO(client.get)
         } yield {
             sender.send(Start(id, GraphQLRequest(query = subscription)))
-            q.dequeue
+            WebSocketSubscription(q.dequeue, id)
         }
     }
 }

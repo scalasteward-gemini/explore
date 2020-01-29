@@ -33,8 +33,13 @@ object ExploreMain extends IOApp {
       for {
         subscription <- explore.model.AppState.pollClient.subscribe[IO, io.circe.Json](
           "subscription { poll_results {option_id option { id text } votes}}")
-        _ <- subscription/*.stream*/.evalMap(v => IO(println(v))).compile.drain
-      } yield()
+        _ <- IO {
+          js.timers.setTimeout(30000){
+            subscription.stop.unsafeRunAsyncAndForget()
+          }
+        }
+        _ <- subscription.stream.evalMap(v => IO(println(v))).compile.drain
+      } yield ()
     ).unsafeRunAsyncAndForget()
 
     ExitCode.Success
