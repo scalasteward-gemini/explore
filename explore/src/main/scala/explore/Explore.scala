@@ -40,7 +40,9 @@ object ExploreMain extends IOApp {
         }
         _ <- subscription.stream.evalMap(v => IO(println(v))).compile.drain
       } yield ()
-    ).unsafeRunAsyncAndForget()
+    ).unsafeRunAsync{r => 
+      r.swap.foreach(e => println(s"ERROR: $e"))
+    }
 
     ExitCode.Success
   }

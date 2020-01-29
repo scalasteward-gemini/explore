@@ -10,9 +10,11 @@ import io.circe.parser._
 import fs2.concurrent.Queue
 import java.util.UUID
 import scala.collection.mutable
+import scala.scalajs.js
 import org.scalajs.dom.raw.Event
 import org.scalajs.dom.raw.MessageEvent
 import cats.effect.concurrent.Deferred
+import cats.data.EitherT
 
 // This implementation follows the Apollo protocol, specified in:
 // https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md
@@ -24,8 +26,9 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
     case class WebSocketSubscription[F[_] : LiftIO, D](stream: Stream[F, D], private val id: String) extends Stoppable[F] {
         def stop: F[Unit] = {
             LiftIO[F].liftIO(client.get.map{sender => 
+                subscriptions.get(id).foreach(_.terminate())
                 subscriptions -= id
-                sender.send(Stop(id))
+                sender.foreach(_.send(Stop(id)))
             })
         }
     }
@@ -57,29 +60,53 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
             ws.send(msg.asJson.toString)
     }
 
-    lazy private val client: Deferred[IO, WebSocketSender] = {
-        val ws = new WebSocket(uri, Protocol)
-        val deferred = Deferred.unsafe[IO, WebSocketSender]
+    lazy private val client: Deferred[IO, Either[Exception, WebSocketSender]] = {
+        val deferred = Deferred.unsafe[IO, Either[Exception, WebSocketSender]]
 
-        ws.onopen = {_: Event =>
-            val sender = WebSocketSender(ws)
-            deferred.complete(sender).map( _ =>
-                sender.send(ConnectionInit())
-            ).unsafeRunAsyncAndForget()
-        }
+        try {
+            val ws = new WebSocket(uri, Protocol)
 
-        ws.onmessage = {e: MessageEvent =>
-            e.data match { 
-                case str: String => 
-                    val msg = decode[StreamingMessage](str)
-                    println(msg)
-                    msg match {
-                        case Right(DataJson(id, json)) =>
-                            subscriptions.get(id).foreach(_.emitData(json))
-                        case _ =>
-                    }
-                case other => println(s"Unexpected event from WebSocket [$uri]: [$other]")
+            ws.onopen = { _: Event =>
+                val sender = WebSocketSender(ws)
+                deferred.complete(Right(sender)).map( _ =>
+                    sender.send(ConnectionInit())
+                ).unsafeRunAsyncAndForget()
             }
+
+            ws.onmessage = { e: MessageEvent =>
+                e.data match { 
+                    case str: String => 
+                        val msg = decode[StreamingMessage](str)
+                        println(msg)
+                        msg match {
+                            case Right(DataJson(id, json)) =>
+                                subscriptions.get(id).foreach(_.emitData(json))
+                            case _ =>
+                        }
+                    case other => println(s"Unexpected event from WebSocket [$uri]: [$other]")
+                }
+            }
+            
+            ws.onerror = { e: Event =>
+                deferred.complete(
+                    parse(js.JSON.stringify(e)).flatMap( json =>
+                        Left(new GraphQLException(List(json)))
+                    )
+                ).recover {
+                    case _: IllegalStateException => // Deferred was already complete
+                        // We must cancel all subscriptions
+                        subscriptions.foreach{ case(id, emitter) =>
+                            emitter.terminate()
+                            subscriptions -= id
+                        }
+                }
+                .unsafeRunAsyncAndForget()
+            }
+
+            // ws.onclose // TODO Reconnect? We would have to change Deferred mechanism.
+        } catch {
+            case e: Exception => 
+                deferred.complete(Left(e)).unsafeRunAsyncAndForget()
         }
 
         deferred
@@ -97,13 +124,13 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
     }
 
     def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): F[Subscription[F, D]] = {
-        for {
-            idq <- buildQueue[F, D]
-            (id, q) = idq
-            sender <- LiftIO[F].liftIO(client.get)
+        (for {
+            sender <- EitherT(LiftIO[F].liftIO(client.get))
+            idq <- EitherT.right[Exception](buildQueue[F, D])
         } yield {
+            val (id, q) = idq
             sender.send(Start(id, GraphQLRequest(query = subscription)))
             WebSocketSubscription(q.dequeue.unNoneTerminate, id)
-        }
+        }).value.rethrow
     }
 }
