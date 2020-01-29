@@ -10,7 +10,8 @@ package object client {
             "ConnectionAck" -> "connection_ack",
             "KeepAlive" -> "ka",
             "Start" -> "start",
-            "Stop" -> "stop"
+            "Stop" -> "stop",
+            "Data" -> "data"
         )
 
     implicit protected[client] val genDevConfig: Configuration =

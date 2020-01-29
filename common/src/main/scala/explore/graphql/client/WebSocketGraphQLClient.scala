@@ -4,7 +4,6 @@ import fs2.Stream
 import cats.effect._
 import cats.implicits._
 import org.scalajs.dom.raw.WebSocket
-import scala.scalajs.js
 import io.circe._
 import io.circe.syntax._
 import io.circe.parser._
@@ -16,22 +15,14 @@ import org.scalajs.dom.raw.MessageEvent
 import cats.effect.concurrent.Deferred
 
 case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) extends GraphQLStreamingClient {
-    println(csIO)
-
-    // case class Payload[D : Decoder](data: D)
-
-    // case class Data[D : Decoder](id: String, payload: Payload[D])
-
-
     private trait Emitter {
-        def emitData(data: js.Any): Unit
+        def emitData(json: Json): Unit
     }
 
     private case class QueueEmitter[F[_] : Effect, D : Decoder](queue: Queue[F, D]) extends Emitter {
-        def emitData(data: js.Any): Unit = {
-            val str = js.JSON.stringify(data)
-            val d = parse(str).flatMap(_.as[D])                        
-            val effect = queue.enqueue1(d.getOrElse[D](null.asInstanceOf[D]))
+        def emitData(json: Json): Unit = {
+            val data = json.as[D]
+            val effect = queue.enqueue1(data.getOrElse[D](null.asInstanceOf[D]))
             Effect[F].toIO(effect).unsafeRunAsyncAndForget()
         }
     }
@@ -61,6 +52,11 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
                 case str: String => 
                     val msg = decode[StreamingMessage](str)
                     println(msg)
+                    msg match {
+                        case Right(DataJson(id, json)) =>
+                            subscriptions.get(id).foreach(_.emitData(json))
+                        case _ =>
+                    }
                 case other => println(s"Unexpected event from WebSocket [$uri]: [$other]")
             }
         }
