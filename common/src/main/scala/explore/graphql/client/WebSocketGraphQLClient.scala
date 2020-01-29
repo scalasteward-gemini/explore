@@ -47,11 +47,6 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
             Effect[F].toIO(effect).unsafeRunAsyncAndForget()
         }
 
-        /*def raiseError(e: Throwable): Unit = {
-            val effect = queue.enqueue1(Left(e))
-            Effect[F].toIO(effect).unsafeRunAsyncAndForget()
-        }*/
-
         def terminate(): Unit = {
             val effect = queue.enqueue1(Right(None))
             Effect[F].toIO(effect).unsafeRunAsyncAndForget()
@@ -87,7 +82,6 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
                         // println(msg)
                         msg match {
                             case Left(e) =>
-                                // subscriptions.get(id).foreach(_.raiseError(e)) // We don't have an id
                                 println(s"Exception decoding WebSocket message for [$uri]") // TODO Proper logger
                                 e.printStackTrace()
                             case Right(DataJson(id, json)) =>
@@ -114,7 +108,7 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
                 .unsafeRunAsyncAndForget()
             }
 
-            // ws.onclose // TODO Reconnect? We would have to change Deferred mechanism.
+            // ws.onclose // TODO Reconnect? We would have to change Deferred mechanism. Or use wrapper? Reestablish subscriptions?
         } catch {
             case e: Exception => 
                 deferred.complete(Left(e)).unsafeRunAsyncAndForget()
