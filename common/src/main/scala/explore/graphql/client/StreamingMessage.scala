@@ -1,12 +1,12 @@
 package explore.graphql.client
 
-import io.circe.Encoder
-import io.circe.Json
-import io.circe.Decoder
-import io.circe.HCursor
-import io.circe.syntax._
+// import io.circe.Encoder
+// import io.circe.Json
+// import io.circe.Decoder
+// import io.circe.HCursor
+// import io.circe.syntax._
 
-// import io.circe.generic.extras._
+import io.circe.generic.extras._
 // import scala.scalajs.js
 // import io.circe._
 // import io.circe.generic.semiauto._
@@ -14,30 +14,30 @@ import io.circe.syntax._
 // import io.circe.generic.extras.JsonKey
 
 // @JsonCodec
-protected[client] sealed trait StreamingMessage {
-    val tpe: MessageType
-}
+@ConfiguredJsonCodec
+protected[client] sealed trait StreamingMessage
 
 protected[client] sealed trait PayloadMessage[P] extends StreamingMessage {
     val payload: P
-
-    implicit val encoder: Encoder[P]
 }
 
 protected[client] final case class ConnectionInit(payload: Map[String, String] = Map.empty)
-    (implicit val encoder: Encoder[Map[String, String]]) extends PayloadMessage[Map[String, String]] {
-    val tpe = "connection_init"
+        extends PayloadMessage[Map[String, String]]
+
+protected[client] case object ConnectionAck extends StreamingMessage
+
+protected[client] case object KeepAlive extends StreamingMessage
+
+protected[client] sealed trait SubscriptionMessage extends StreamingMessage {
+    val id: String
 }
 
-protected[client] case object ConnectionAck extends StreamingMessage {
-    val tpe = "connection_ack"
-}
+protected[client] final case class Start(id: String, payload: GraphQLRequest) 
+    extends SubscriptionMessage with PayloadMessage[GraphQLRequest]
 
-protected[client] case object KeepAlive extends StreamingMessage {
-    val tpe = "ka"
-}
+protected[client] final case class Stop(id: String) extends SubscriptionMessage
 
-object StreamingMessage {
+/*object StreamingMessage {
     implicit val encoder: Encoder[StreamingMessage] = new Encoder[StreamingMessage] {
         final def apply(msg: StreamingMessage): Json =
             Json.obj(
@@ -63,4 +63,4 @@ object StreamingMessage {
             }
         }
     }
-}
+}*/

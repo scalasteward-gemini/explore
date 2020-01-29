@@ -13,6 +13,7 @@ import java.util.UUID
 import scala.collection.mutable
 import org.scalajs.dom.raw.Event
 import org.scalajs.dom.raw.MessageEvent
+import cats.effect.concurrent.Deferred
 
 case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) extends GraphQLStreamingClient {
     println(csIO)
@@ -39,14 +40,20 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
 
     private val Protocol = "graphql-ws"
 
-    lazy private val client = {
-        val ws = new WebSocket(uri, Protocol)
-
+    private case class WebSocketSender(private val ws: WebSocket) {
         def send(msg: StreamingMessage): Unit =
             ws.send(msg.asJson.toString)
+    }
+
+    lazy private val client: Deferred[IO, WebSocketSender] = {
+        val ws = new WebSocket(uri, Protocol)
+        val deferred = Deferred.unsafe[IO, WebSocketSender]
 
         ws.onopen = {_: Event =>
-            send(ConnectionInit())
+            val sender = WebSocketSender(ws)
+            deferred.complete(sender).map( _ =>
+                sender.send(ConnectionInit())
+            ).unsafeRunAsyncAndForget()
         }
 
         ws.onmessage = {e: MessageEvent =>
@@ -58,29 +65,28 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
             }
         }
 
-        ws
+        deferred
     }
 
-    private def buildQueue[F[_] : ConcurrentEffect, D : Decoder]: F[Queue[F, D]] = {
+    private def buildQueue[F[_] : ConcurrentEffect, D : Decoder]: F[(String, Queue[F, D])] = {
         for {
             queue <- Queue.unbounded[F, D]
-            _ <- Sync[F].delay {
-                val id = UUID.randomUUID()
-                val emitter = QueueEmitter(queue)
-                subscriptions += (id.toString -> emitter)
-            }
-        } yield queue
+        } yield {
+            val id = UUID.randomUUID().toString
+            val emitter = QueueEmitter(queue)
+            subscriptions += (id -> emitter)
+            (id, queue)
+        }
     }
 
-    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): Stream[F, D] = {
-
-        println(subscription)
-        println(client)
-        // client.send subscription
-
+    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): F[Stream[F, D]] = {
         for {
-            q <- Stream.eval(buildQueue[F, D])
-            d <- q.dequeue//.rethrow
-        } yield d
+            idq <- buildQueue[F, D]
+            (id, q) = idq
+            sender <- LiftIO[F].liftIO(client.get)
+        } yield {
+            sender.send(Start(id, GraphQLRequest(query = subscription)))
+            q.dequeue
+        }
     }
 }

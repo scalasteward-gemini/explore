@@ -7,5 +7,5 @@ import cats.effect.ConcurrentEffect
 trait GraphQLStreamingClient {
     val uri: String
 
-    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): Stream[F, D]
+    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): F[Stream[F, D]]
 }

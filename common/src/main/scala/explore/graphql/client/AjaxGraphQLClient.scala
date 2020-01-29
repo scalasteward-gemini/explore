@@ -3,24 +3,10 @@ package explore.graphql.client
 import cats.effect._
 import org.scalajs.dom.ext.Ajax
 import io.circe._
-import io.circe.generic.auto._
 import io.circe.syntax._
 import io.circe.parser._
 
 case class AjaxGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) extends GraphQLClient {
-    // Request
-    // {
-    //   "query": "...",
-    //   "operationName": "...",
-    //   "variables": { "myVariable": "someValue", ... }
-    // }
-
-    private case class Request(
-        query: String,
-        operationName: Option[String] = None,
-        variables: Option[Json] = None
-    )
-
     // Response
     // {
     //   "data": { ... }, // Typed
@@ -32,7 +18,7 @@ case class AjaxGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) exten
             IO.fromFuture(IO(
                 Ajax.post(
                     url = uri,
-                    data = Request(document, operationName = operationName, variables = variables).asJson.toString,
+                    data = GraphQLRequest(document, operationName = operationName, variables = variables).asJson.toString,
                     headers = Map("Content-Type" -> "application/json")
                     )
             ))

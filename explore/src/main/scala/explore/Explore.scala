@@ -29,7 +29,8 @@ object ExploreMain extends IOApp {
     val router = Router(BaseUrl.fromWindowOrigin, Routing.config)
     router().renderIntoDOM(container)
 
-    explore.model.AppState.pollClient.subscribe[IO, explore.model.Task]("")
+    explore.model.AppState.pollClient.subscribe[IO, explore.model.Task](
+      "subscription { poll_results {option_id option { id text } votes}}").unsafeRunAsyncAndForget()
 
     ExitCode.Success
   }
