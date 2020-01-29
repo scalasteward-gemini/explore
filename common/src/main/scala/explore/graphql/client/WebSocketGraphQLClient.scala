@@ -29,12 +29,18 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
 
     private trait Emitter {
         def emitData(json: Json): Unit
+        def terminate(): Unit
     }
 
-    private case class QueueEmitter[F[_] : Effect, D : Decoder](queue: Queue[F, D]) extends Emitter {
+    private case class QueueEmitter[F[_] : Effect, D : Decoder](queue: Queue[F, Option[D]]) extends Emitter {
         def emitData(json: Json): Unit = {
             val data = json.as[D]
-            val effect = queue.enqueue1(data.getOrElse[D](null.asInstanceOf[D]))
+            val effect = queue.enqueue1(data.toOption) // TODO Better handle errors
+            Effect[F].toIO(effect).unsafeRunAsyncAndForget()
+        }
+
+        def terminate(): Unit = {
+            val effect = queue.enqueue1(None) // TODO Better handle errors
             Effect[F].toIO(effect).unsafeRunAsyncAndForget()
         }
     }
@@ -76,9 +82,9 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
         deferred
     }
 
-    private def buildQueue[F[_] : ConcurrentEffect, D : Decoder]: F[(String, Queue[F, D])] = {
+    private def buildQueue[F[_] : ConcurrentEffect, D : Decoder]: F[(String, Queue[F, Option[D]])] = {
         for {
-            queue <- Queue.unbounded[F, D]
+            queue <- Queue.unbounded[F, Option[D]]
         } yield {
             val id = UUID.randomUUID().toString
             val emitter = QueueEmitter(queue)
@@ -94,7 +100,7 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
             sender <- LiftIO[F].liftIO(client.get)
         } yield {
             sender.send(Start(id, GraphQLRequest(query = subscription)))
-            WebSocketSubscription(q.dequeue, id)
+            WebSocketSubscription(q.dequeue.unNoneTerminate, id)
         }
     }
 }
