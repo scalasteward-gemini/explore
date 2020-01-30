@@ -10,14 +10,14 @@ import scala.concurrent.ExecutionContext.Implicits._
 import scala.util.Success
 import scala.util.Failure
 
-case class AjaxGraphQLClient(uri: String) extends GraphQLClient {
+case class AjaxGraphQLClient(uri: String) extends GraphQLClient[Async] {
     // Response
     // {
     //   "data": { ... }, // Typed
     //   "errors": [ ... ]
     // }
 
-    protected def queryInternal[F[_] : Async, V, D: Decoder](document: String, operationName: Option[String] = None, variables: Option[Json] = None): F[D] = 
+    override protected def queryInternal[F[_] : Async, D: Decoder](document: String, operationName: Option[String] = None, variables: Option[Json] = None): F[D] = 
         Async[F].async{ cb =>
             Ajax.post(
                 url = uri,

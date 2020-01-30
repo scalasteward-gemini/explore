@@ -1,11 +1,10 @@
 package explore.graphql.client
 
 import io.circe.Decoder
-import cats.effect.ConcurrentEffect
 
 // Effects are purposely declared in individual methods instead of the trait.
 // This is so that the methods can be easily called from tagless code.
-trait GraphQLStreamingClient {
+trait GraphQLStreamingClient[E[_[_]]] extends GraphQLClient[E] {
     val uri: String
 
     protected trait Stoppable[F[_]] {
@@ -14,5 +13,5 @@ trait GraphQLStreamingClient {
 
     type Subscription[F[_], D] <: Stoppable[F]
 
-    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): F[Subscription[F, D]]
+    def subscribe[F[_] : E, D : Decoder](subscription: String): F[Subscription[F, D]]
 }
