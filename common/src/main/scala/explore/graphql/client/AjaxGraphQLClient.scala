@@ -21,7 +21,7 @@ case class AjaxGraphQLClient(uri: String) extends GraphQLClient[Async] {
         Async[F].async{ cb =>
             Ajax.post(
                 url = uri,
-                data = GraphQLRequest(document, operationName = operationName, variables = variables).asJson.toString,
+                data = GraphQLRequest(document, operationName, variables).asJson.toString,
                 headers = Map("Content-Type" -> "application/json")
             ).onComplete{
                 case Success(r) =>

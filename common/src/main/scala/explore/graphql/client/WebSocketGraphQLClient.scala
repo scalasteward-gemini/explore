@@ -145,26 +145,23 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
         }
     }
 
-    def subscribe[F[_] : ConcurrentEffect, D : Decoder](subscription: String): F[Subscription[F, D]] = {
+    protected def subscribeInternal[F[_] : ConcurrentEffect, D : Decoder](subscription: String, operationName: Option[String] = None, variables: Option[Json] = None): F[Subscription[F, D]] = {
         (for {
             sender <- EitherT(LiftIO[F].liftIO(client.get))
             idq <- EitherT.right[Exception](buildQueue[F, D])
         } yield {
             val (id, q) = idq
-            sender.send(StreamingMessage.Start(id, GraphQLRequest(query = subscription)))
+            sender.send(StreamingMessage.Start(id, GraphQLRequest(subscription, operationName, variables)))
             WebSocketSubscription(q.dequeue.rethrow.unNoneTerminate, id)
         }).value.rethrow
     }
 
     protected def queryInternal[F[_] : ConcurrentEffect, D: Decoder](document: String, operationName: Option[String] = None, variables: Option[Json] = None): F[D] = {
-        println(operationName)
-        println(variables)
-
         // Cleanup should happen automatically, as long as the server sends the "Complete" message.
         // We could add an option to force cleanup, in which case we would wrap the IO.asyncF in a Bracket.
         LiftIO[F].liftIO{
             IO.asyncF[D]{ cb =>
-                subscribe[IO, D](document).flatMap{ subscription =>
+                subscribeInternal[IO, D](document, operationName, variables).flatMap{ subscription =>
                     subscription.stream
                         .attempt
                         .take(1)
