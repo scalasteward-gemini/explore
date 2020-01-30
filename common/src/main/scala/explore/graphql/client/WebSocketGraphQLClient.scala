@@ -15,6 +15,7 @@ import org.scalajs.dom.raw.Event
 import org.scalajs.dom.raw.MessageEvent
 import cats.effect.concurrent.Deferred
 import cats.data.EitherT
+import StreamingMessage._
 
 // This implementation follows the Apollo protocol, specified in:
 // https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md
@@ -35,6 +36,7 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
 
     private trait Emitter {
         def emitData(json: Json): Unit
+        def emitError(json: Json): Unit
         def terminate(): Unit
     }
 
@@ -44,6 +46,12 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
         def emitData(json: Json): Unit = {
             val data = json.as[D]
             val effect = queue.enqueue1(data.map(_.some))
+            Effect[F].toIO(effect).unsafeRunAsyncAndForget()
+        }
+
+        def emitError(json: Json): Unit = {
+            val error = new GraphQLException(List(json))
+            val effect = queue.enqueue1(Left(error))
             Effect[F].toIO(effect).unsafeRunAsyncAndForget()
         }
 
@@ -82,13 +90,23 @@ case class WebSocketGraphQLClient(uri: String)(implicit csIO: ContextShift[IO]) 
                         // println(msg)
                         msg match {
                             case Left(e) =>
-                                println(s"Exception decoding WebSocket message for [$uri]") // TODO Proper logger
+                                // TODO Proper logging
+                                println(s"Exception decoding WebSocket message for [$uri]")
                                 e.printStackTrace()
+                            case Right(ConnectionError(json)) =>
+                                // TODO Proper logging
+                                println(s"Connection error on WebSocket for [$uri]: $json")
                             case Right(DataJson(id, json)) =>
                                 subscriptions.get(id).foreach(_.emitData(json))
+                            case Right(StreamingMessage.Error(id, json)) =>
+                                println((id, json))
+                            case Right(Complete(id)) =>
+                                subscriptions.get(id).foreach(_.terminate())
                             case _ =>
                         }
-                    case other => println(s"Unexpected event from WebSocket [$uri]: [$other]")
+                    case other => 
+                        // TODO Proper logging
+                        println(s"Unexpected event from WebSocket for [$uri]: [$other]")
                 }
             }
             
