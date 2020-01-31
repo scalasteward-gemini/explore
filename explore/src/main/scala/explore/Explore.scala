@@ -29,13 +29,15 @@ object ExploreMain extends IOApp {
     val router = Router(BaseUrl.fromWindowOrigin, Routing.config)
     router().renderIntoDOM(container)
 
-    (
+    /*(
       for {
         subscription <- explore.model.AppState.pollClient.subscribe[IO, io.circe.Json](
-          "subscription { poll_results {option_id option { id text } votes}}")
-         _ <- IO {
-           js.timers.setTimeout(2000) {
-             explore.model.AppState.pollClient.query[IO, io.circe.Json]("""query {
+          "subscription { poll_results {option_id option { id text } votes}}"
+        )
+        _ <- IO {
+          js.timers.setTimeout(2000) {
+            explore.model.AppState.pollClient
+              .query[IO, io.circe.Json]("""query {
                 poll {
                   id
                   question
@@ -44,21 +46,23 @@ object ExploreMain extends IOApp {
                     text
                   }
                 }
-              }""").map{ data =>
+              }""")
+              .map { data =>
                 println(data)
-              }.unsafeRunAsyncAndForget()
-           }
-         }
+              }
+              .unsafeRunAsyncAndForget()
+          }
+        }
         _ <- IO {
-          js.timers.setTimeout(30000){
+          js.timers.setTimeout(30000) {
             subscription.stop.unsafeRunAsyncAndForget()
           }
         }
         _ <- subscription.stream.evalMap(v => IO(println(v))).compile.drain
       } yield ()
-    ).unsafeRunAsync{r => 
+    ).unsafeRunAsync { r =>
       r.swap.foreach(e => println(s"ERROR: $e"))
-    }
+    }*/
 
     ExitCode.Success
   }

@@ -11,6 +11,7 @@ import react.gridlayout._
 import react.sizeme._
 import model._
 import explore.todo.Todo
+import explore.polls.Polls
 
 object HomeComponent {
 
@@ -61,9 +62,14 @@ object HomeComponent {
               <.div(
                 ^.key := "doc",
                 ^.cls := "tile",
-                Tile(Tile.Props("Target Position"),
-                     Todo(Views.todoList),
-                     Views.target.streamRender(targetOpt => <.div(targetOpt.whenDefined(target => Tpe(target)))))
+                Tile(
+                  Tile.Props("Target Position"),
+                  Todo(Views.todoList),
+                  Views.polls.streamRender(Polls.apply),
+                  // PollResults(java.util.UUID.fromString("98277113-a7a2-428c-9c8b-0fe7a91bf42c")),
+                  Views.target
+                    .streamRender(targetOpt => <.div(targetOpt.whenDefined(target => Tpe(target))))
+                )
               )
             )
           }
