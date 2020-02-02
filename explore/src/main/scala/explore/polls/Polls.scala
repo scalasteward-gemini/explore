@@ -23,8 +23,8 @@ object Polls {
             <.div(
               <.h2(poll.question),
               poll.options.toTagMod{ option =>
-                <.div(
-                  <.button(option.text)
+                <.span(
+                  <.button(^.tpe := "button", option.text, ^.onClick --> PollsActionsIO.vote(option.id))
                 )
               },
               <.div(PollResults(poll.id))

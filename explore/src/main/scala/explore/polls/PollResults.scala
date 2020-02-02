@@ -99,10 +99,15 @@ object PollResults {
         <.div(
           state.renderer.whenDefined(
             _ { results =>
-
-              println(s"RESULTS: $results")
-
-              results.toString()
+              <.ol(
+                results.toTagMod{ result =>
+                  (for {
+                      option <- result.option
+                      votes <- result.votes
+                    } yield (option.text, votes)
+                  ).whenDefined{ case (text, votes) => <.li(s"$text: $votes")}
+                }
+              )
             }
           )
         )
