@@ -22,17 +22,17 @@ object PollResultsSubscription extends GraphQLQuery {
   case class Variables(pollId: UUID)
   object Variables { implicit val jsonEncoder: Encoder[Variables] = deriveEncoder[Variables] }
 
-  case class Data(poll_results: List[Poll_result])
+  case class Data(poll_results: List[PollResult])
   object Data { implicit val jsonDecoder: Decoder[Data] = deriveDecoder[Data] }
 
-  case class Poll_result(
+  case class PollResult(
     option_id: Option[UUID],
     option:    Option[PollOption],
     votes:     Option[Long]
   )
-  object Poll_result {
-    implicit val jsonDecoder: Decoder[Poll_result] = deriveDecoder[Poll_result]
-    implicit val jsonEncoder: Encoder[Poll_result] = deriveEncoder[Poll_result]
+  object PollResult {
+    implicit val jsonDecoder: Decoder[PollResult] = deriveDecoder[PollResult]
+    implicit val jsonEncoder: Encoder[PollResult] = deriveEncoder[PollResult]
   }
 
   implicit val varEncoder: Encoder[Variables] = Variables.jsonEncoder
