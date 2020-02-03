@@ -6,6 +6,7 @@ import react.common._
 import explore.model.Poll
 import explore.model.Actions.PollsActionsIO
 import crystal.react.io.implicits._
+import cats.effect._
 
 final case class Polls(polls: List[Poll]) extends ReactProps {
   @inline def render: VdomElement = Polls.component(this)
@@ -14,20 +15,27 @@ final case class Polls(polls: List[Poll]) extends ReactProps {
 object Polls {
   type Props = Polls
 
+  final case class State(casting: Boolean = false)
+
   private val component =
     ScalaComponent
       .builder[Props]("Polls")
-      .render_P { props =>
+      .initialState(State())
+      .render { $ =>
         <.div(
-          props.polls.toTagMod{ poll =>
+          $.props.polls.toTagMod{ poll =>
             <.div(
               <.h2(poll.question),
               poll.options.toTagMod{ option =>
                 <.span(
-                  <.button(^.tpe := "button", option.text, ^.onClick --> PollsActionsIO.vote(option.id))
+                  <.button(^.tpe := "button", option.text, 
+                    ^.onClick --> /*$.setState(State(true)).toIO
+                      .flatMap(_ => */PollsActionsIO.vote(option.id)
+                  )
                 )
               },
-              <.div(PollResults(poll.id))
+              // <.span("CASTING...").when($.state.casting),
+              <.div(PollResults(poll.id, IO.unit/*$.setState(State(false)).toIO*/))
             )
           }
         )

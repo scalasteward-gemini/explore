@@ -12,7 +12,7 @@ import crystal.react.StreamRenderer
 import crystal.react.io.implicits._
 import explore.graphql.polls.PollResultsSubscription
 
-final case class PollResults(pollId: UUID) extends ReactProps {
+final case class PollResults(pollId: UUID, onNewData: IO[Unit]) extends ReactProps {
   @inline def render: VdomElement = PollResults.component(this)
 }
 
@@ -55,7 +55,8 @@ object PollResults {
           .flatMap { subscription =>
             $.modStateIO(_ =>
               State(subscription.some,
-                    StreamRenderer.build(subscription.stream.map(_.poll_results)).some)
+                    StreamRenderer.build(subscription.stream.map(_.poll_results)
+                      .flatTap(_ => fs2.Stream.eval($.props.onNewData))).some)
             )
           }
       }
