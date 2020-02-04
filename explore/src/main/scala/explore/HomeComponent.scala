@@ -12,6 +12,8 @@ import react.sizeme._
 import model._
 import explore.todo.Todo
 import explore.polls.Polls
+import cats.effect.IO
+import crystal.react.StreamRenderer
 
 object HomeComponent {
 
@@ -39,6 +41,9 @@ object HomeComponent {
       // (BreakpointName.xs, (480, 6, layout))
     )
 
+  import AppState._
+  private val pollConnectionStatus = StreamRenderer.build(pollClient.statusStream[IO])
+
   val component =
     ScalaComponent
       .builder[Unit]("Home")
@@ -64,9 +69,9 @@ object HomeComponent {
                 ^.cls := "tile",
                 Tile(
                   Tile.Props("Target Position"),
+                  pollConnectionStatus(status => <.div(status.toString)),
                   Todo(Views.todoList),
                   Views.polls.streamRender(Polls.apply),
-                  // PollResults(java.util.UUID.fromString("98277113-a7a2-428c-9c8b-0fe7a91bf42c")),
                   Views.target
                     .streamRender(targetOpt => <.div(targetOpt.whenDefined(target => Tpe(target))))
                 )

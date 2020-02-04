@@ -3,6 +3,7 @@ package explore.graphql.client
 import cats.implicits._
 import io.circe._
 import io.circe.syntax._
+import cats.effect.LiftIO
 
 // Effects are purposely declared in individual methods instead of the trait.
 // This is so that the methods can be easily called from tagless code.
@@ -10,11 +11,16 @@ import io.circe.syntax._
 trait GraphQLStreamingClient[E[_[_]]] extends GraphQLClient[E] {
   val uri: String
 
-  protected trait Stoppable[F[_]] {
+  def status[F[_]: LiftIO]: F[StreamingClientStatus]
+
+  def statusStream[F[_]: LiftIO]: fs2.Stream[F, StreamingClientStatus]
+
+  protected trait StoppableSubscription[F[_], D] {
+    val stream: fs2.Stream[F, D]
     def stop: F[Unit]
   }
 
-  type Subscription[F[_], D] <: Stoppable[F]
+  type Subscription[F[_], D] <: StoppableSubscription[F, D]
 
   def subscribe[F[_]: E](
     graphQLQuery: GraphQLQuery

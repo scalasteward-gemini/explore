@@ -12,15 +12,31 @@ import cats.effect.concurrent.MVar
 import cats.data.EitherT
 import scala.concurrent.duration._
 import scala.language.postfixOps
+import fs2.concurrent.SignallingRef
 
 trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
   implicit val timerIO: Timer[IO]
   implicit val csIO: ContextShift[IO]
 
+  private val connectionStatus: SignallingRef[IO, StreamingClientStatus] =
+    SignallingRef
+      .in[SyncIO, IO, StreamingClientStatus](StreamingClientStatus.Closed)
+      .unsafeRunSync()
+
+  def status[F[_]: LiftIO]: F[StreamingClientStatus] =
+    LiftIO[F].liftIO(connectionStatus.get)
+
+  def statusStream[F[_]: LiftIO]: fs2.Stream[F, StreamingClientStatus] =
+    connectionStatus.discrete.translate(
+      new cats.~>[IO, F] {
+        def apply[A](fa: IO[A]): F[A] = LiftIO[F].liftIO(fa)
+      }
+    )
+
   type Subscription[F[_], D] = ApolloSubscription[F, D]
 
   case class ApolloSubscription[F[_]: LiftIO, D](stream: Stream[F, D], private val id: String)
-      extends Stoppable[F] {
+      extends StoppableSubscription[F, D] {
 
     def stop: F[Unit] =
       LiftIO[F].liftIO(client.read.map { sender =>
@@ -70,7 +86,7 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
     def send(msg: StreamingMessage): Unit
   }
 
-  final protected def processMessage(str: String): Unit =
+  final protected def processMessage(str: String): IO[Unit] = IO {
     decode[StreamingMessage](str) match {
       case Left(e) =>
         // TODO Proper logging
@@ -87,68 +103,74 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
         subscriptions.get(id).foreach(_.terminate())
       case _ =>
     }
+  }
 
-  final protected def terminateAllSubscriptions(): Unit =
+  final protected def terminateAllSubscriptions(): IO[Unit] = IO {
     subscriptions.foreach {
       case (id, emitter) =>
         emitter.terminate()
         subscriptions -= id
     }
+  }
 
   protected def createClientInternal(
-    onOpen:    Sender => Unit,
-    onMessage: String => Unit,
-    onError:   Exception => Unit,
-    onClose:   Boolean => Unit // Boolean = wasClean
-  ): Unit
+    onOpen:    Sender => IO[Unit],
+    onMessage: String => IO[Unit],
+    onError:   Exception => IO[Unit],
+    onClose:   Boolean => IO[Unit] // Boolean = wasClean
+  ): IO[Unit]
 
-  private def createClient(mvar: MVar[IO, Either[Exception, Sender]]): Unit =
-    try {
-      createClientInternal(
-        onOpen = { sender =>
-          mvar
-            .tryPut(Right(sender))
-            .map {
-              case true  => sender.send(StreamingMessage.ConnectionInit())
-              case false => // TODO Handle Error
-            }
-            .unsafeRunAsyncAndForget()
-        },
-        onMessage = processMessage _,
-        onError = { exception =>
-          mvar
-            .tryPut(Left(exception))
-            .map {
-              // Connection was established. We must cancel all subscriptions.
-              case false => terminateAllSubscriptions()
-              case true  => // Retry?
-            }
-            .unsafeRunAsyncAndForget()
-        },
-        onClose = { _ =>
-          (for {
-            _      <- mvar.take
-            _      <- IO.sleep(10 seconds) // TODO: Backoff.
-            _      <- IO(createClient(mvar))
-            sender <- mvar.read
-          } yield (
-            // Restart subscriptions on new client.
-            subscriptions.foreach {
-              case (id, emitter) =>
-                sender.foreach(_.send(StreamingMessage.Start(id, emitter.request)))
-            }
-          )).unsafeRunAsyncAndForget()
-        }
-      )
-    } catch {
-      case e: Exception =>
-        mvar.put(Left(e)).unsafeRunAsyncAndForget() // TODO: Use tryPut and handle error
+  private def createClient(mvar: MVar[IO, Either[Exception, Sender]]): IO[Unit] =
+    connectionStatus.set(StreamingClientStatus.Connecting).flatMap { _ =>
+      try {
+        createClientInternal(
+          onOpen = { sender =>
+            for {
+              _ <- connectionStatus.set(StreamingClientStatus.Open)
+              _ <- mvar
+                .tryPut(Right(sender))
+                .map {
+                  case true  => sender.send(StreamingMessage.ConnectionInit())
+                  case false => // TODO Handle Error
+                }
+            } yield ()
+          },
+          onMessage = processMessage _,
+          onError = { exception =>
+            mvar
+              .tryPut(Left(exception))
+              .flatMap {
+                // Connection was established. We must cancel all subscriptions. (or not?)
+                case false => terminateAllSubscriptions()
+                case true  => connectionStatus.set(StreamingClientStatus.Closed) // Retry?
+              }
+          },
+          onClose = { _ =>
+            (for {
+              _      <- mvar.take
+              _      <- connectionStatus.set(StreamingClientStatus.Closed)
+              _      <- IO.sleep(10 seconds) // TODO: Backoff.
+              _      <- createClient(mvar)
+              sender <- mvar.read
+            } yield (
+              // Restart subscriptions on new client.
+              subscriptions.foreach {
+                case (id, emitter) =>
+                  sender.foreach(_.send(StreamingMessage.Start(id, emitter.request)))
+              }
+            ))
+          }
+        )
+      } catch {
+        case e: Exception =>
+          mvar.put(Left(e)) // TODO: Use tryPut and handle error
+      }
     }
 
   lazy private val client: MVar[IO, Either[Exception, Sender]] = {
     val mvar = MVar.emptyIn[SyncIO, IO, Either[Exception, Sender]].unsafeRunSync()
 
-    createClient(mvar)
+    createClient(mvar).unsafeRunAsyncAndForget()
 
     mvar
   }
