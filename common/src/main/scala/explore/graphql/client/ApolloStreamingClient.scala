@@ -33,12 +33,21 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
       }
     )
 
+  def close[F[_] : ConcurrentEffect](): F[Unit] =
+      LiftIO[F].liftIO(
+        for {
+          isEmpty <- client.isEmpty
+          sender <- if(!isEmpty) client.read.map(_.toOption) else IO(None)
+          _ <- sender.fold(IO.unit)(_.close())
+        } yield ()
+      )
+
   type Subscription[F[_], D] = ApolloSubscription[F, D]
 
   case class ApolloSubscription[F[_]: LiftIO, D](stream: Stream[F, D], private val id: String)
       extends StoppableSubscription[F, D] {
 
-    def stop: F[Unit] =
+    def stop(): F[Unit] =
       LiftIO[F].liftIO(client.read.map { sender =>
         subscriptions.get(id).foreach(_.terminate())
         subscriptions -= id
@@ -83,7 +92,8 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
   protected type WebSocketClient
 
   protected trait Sender {
-    def send(msg: StreamingMessage): Unit
+    def send(msg: StreamingMessage): IO[Unit]
+    protected[client] def close(): IO[Unit]
   }
 
   final protected def processMessage(str: String): IO[Unit] = IO {
@@ -150,6 +160,7 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
               _      <- mvar.take
               _      <- connectionStatus.set(StreamingClientStatus.Closed)
               _      <- IO.sleep(10 seconds) // TODO: Backoff.
+              // math.min(60000, math.max(200, value.nextAttempt * 2)))
               _      <- createClient(mvar)
               sender <- mvar.read
             } yield (

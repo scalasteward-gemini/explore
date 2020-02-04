@@ -20,8 +20,11 @@ case class WebSocketGraphQLClient(uri: String)(
   type WebSocketClient = WebSocket
 
   private case class WebSocketSender(private val ws: WebSocketClient) extends Sender {
-    def send(msg: StreamingMessage): Unit =
-      ws.send(msg.asJson.toString)
+    def send(msg: StreamingMessage): IO[Unit] =
+      IO(ws.send(msg.asJson.toString))
+
+    protected[client] def close(): IO[Unit] = 
+      IO(ws.close())
   }
 
   protected def createClientInternal(

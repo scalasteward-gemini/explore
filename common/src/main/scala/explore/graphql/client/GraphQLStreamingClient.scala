@@ -15,9 +15,11 @@ trait GraphQLStreamingClient[E[_[_]]] extends GraphQLClient[E] {
 
   def statusStream[F[_]: LiftIO]: fs2.Stream[F, StreamingClientStatus]
 
+  def close[F[_] : E](): F[Unit]
+
   protected trait StoppableSubscription[F[_], D] {
     val stream: fs2.Stream[F, D]
-    def stop: F[Unit]
+    def stop(): F[Unit]
   }
 
   type Subscription[F[_], D] <: StoppableSubscription[F, D]
