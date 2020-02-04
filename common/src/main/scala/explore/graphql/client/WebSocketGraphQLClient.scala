@@ -23,7 +23,7 @@ case class WebSocketGraphQLClient(uri: String)(
     def send(msg: StreamingMessage): IO[Unit] =
       IO(ws.send(msg.asJson.toString))
 
-    protected[client] def close(): IO[Unit] = 
+    protected[client] def close(): IO[Unit] =
       IO(ws.close())
   }
 

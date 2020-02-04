@@ -34,7 +34,7 @@ object ExploreMain extends IOApp {
   }
 
   @JSExport
-  def stop(): Unit = 
+  def stop(): Unit =
     // Close the websocket
     AppState.pollClient.close[IO]().unsafeRunAsyncAndForget()
 }

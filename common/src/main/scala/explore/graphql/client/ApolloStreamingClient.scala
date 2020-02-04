@@ -33,14 +33,16 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
       }
     )
 
-  def close[F[_] : ConcurrentEffect](): F[Unit] =
-      LiftIO[F].liftIO(
-        for {
-          isEmpty <- client.isEmpty
-          sender <- if(!isEmpty) client.read.map(_.toOption) else IO(None)
-          _ <- sender.fold(IO.unit)(_.close())
-        } yield ()
-      )
+  def close[F[_]: ConcurrentEffect](): F[Unit] =
+    LiftIO[F].liftIO(
+      for {
+        isEmpty <- client.isEmpty
+        sender  <- if (!isEmpty) client.read.map(_.toOption) else IO(None)
+        _ <- sender.fold(IO.unit)(s =>
+          connectionStatus.set(StreamingClientStatus.Closing).flatMap(_ => s.close())
+        )
+      } yield ()
+    )
 
   type Subscription[F[_], D] = ApolloSubscription[F, D]
 
@@ -157,9 +159,9 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
           },
           onClose = { _ =>
             (for {
-              _      <- mvar.take
-              _      <- connectionStatus.set(StreamingClientStatus.Closed)
-              _      <- IO.sleep(10 seconds) // TODO: Backoff.
+              _ <- mvar.take
+              _ <- connectionStatus.set(StreamingClientStatus.Closed)
+              _ <- IO.sleep(10 seconds) // TODO: Backoff.
               // math.min(60000, math.max(200, value.nextAttempt * 2)))
               _      <- createClient(mvar)
               sender <- mvar.read
