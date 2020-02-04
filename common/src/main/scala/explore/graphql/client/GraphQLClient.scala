@@ -9,16 +9,17 @@ import io.circe.syntax._
 trait GraphQLClient[E[_[_]]] {
   val uri: String
 
+  // Query with GraphQLQuery
   def query[F[_]: E](
-    graphQLQuery: GraphQLQuery
-  )(variables:    Option[graphQLQuery.Variables] = None): F[graphQLQuery.Data] = {
+    graphQLQuery:  GraphQLQuery,
+    operationName: Option[String] = None
+  )(variables:     Option[graphQLQuery.Variables] = None): F[graphQLQuery.Data] = {
     import graphQLQuery._
 
-    variables.fold(query[F, graphQLQuery.Data](graphQLQuery.document)) { v =>
-      query[F, graphQLQuery.Variables, graphQLQuery.Data](graphQLQuery.document, v)
-    }
+    queryInternal(graphQLQuery.document, operationName, variables.map(_.asJson))
   }
 
+  // Queries with String
   def query[F[_]: E, V: Encoder, D: Decoder](
     document:      String,
     variables:     V,

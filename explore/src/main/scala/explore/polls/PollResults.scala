@@ -35,12 +35,13 @@ object PollResults {
           state.renderer.whenDefined(
             _ { results =>
               <.ol(
-                results.toTagMod{ result =>
+                results.toTagMod { result =>
                   (for {
-                      option <- result.option
-                      votes <- result.votes
-                    } yield (option.text, votes)
-                  ).whenDefined{ case (text, votes) => <.li(s"$text: $votes")}
+                    option <- result.option
+                    votes  <- result.votes
+                  } yield (option.text, votes)).whenDefined {
+                    case (text, votes) => <.li(s"$text: $votes")
+                  }
                 }
               )
             }
@@ -55,8 +56,13 @@ object PollResults {
           .flatMap { subscription =>
             $.modStateIO(_ =>
               State(subscription.some,
-                    StreamRenderer.build(subscription.stream.map(_.poll_results)
-                      .flatTap(_ => fs2.Stream.eval($.props.onNewData))).some)
+                    StreamRenderer
+                      .build(
+                        subscription.stream
+                          .map(_.poll_results)
+                          .flatTap(_ => fs2.Stream.eval($.props.onNewData))
+                      )
+                      .some)
             )
           }
       }

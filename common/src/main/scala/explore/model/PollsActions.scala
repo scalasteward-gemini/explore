@@ -24,9 +24,12 @@ class PollsActionsInterpreter[F[_]: ConcurrentEffect](lens: FixedLens[F, List[Po
       _     <- lens.set(polls)
     } yield ()
 
-    def vote(optionId: UUID): F[Unit] = {
-      AppState.pollClient.query[F](VoteMutation)(
-        VoteMutation.Variables(optionId, UUID.fromString("664ccbe7-b3da-9865-e7cf-8e64ea91897d")).some
-      ).map(_ => ())
-    }
+  def vote(optionId: UUID): F[Unit] =
+    AppState.pollClient
+      .query[F](VoteMutation)(
+        VoteMutation
+          .Variables(optionId, UUID.fromString("664ccbe7-b3da-9865-e7cf-8e64ea91897d"))
+          .some
+      )
+      .map(_ => ())
 }

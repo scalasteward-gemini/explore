@@ -23,19 +23,19 @@ object Polls {
       .initialState(State())
       .render { $ =>
         <.div(
-          $.props.polls.toTagMod{ poll =>
+          $.props.polls.toTagMod { poll =>
             <.div(
               <.h2(poll.question),
-              poll.options.toTagMod{ option =>
+              poll.options.toTagMod { option =>
                 <.span(
-                  <.button(^.tpe := "button", option.text, 
-                    ^.onClick --> /*$.setState(State(true)).toIO
-                      .flatMap(_ => */PollsActionsIO.vote(option.id)
-                  )
+                  <.button(^.tpe := "button",
+                           option.text,
+                           ^.onClick --> /*$.setState(State(true)).toIO
+                      .flatMap(_ => */ PollsActionsIO.vote(option.id))
                 )
               },
               // <.span("CASTING...").when($.state.casting),
-              <.div(PollResults(poll.id, IO.unit/*$.setState(State(false)).toIO*/))
+              <.div(PollResults(poll.id, IO.unit /*$.setState(State(false)).toIO*/ ))
             )
           }
         )
@@ -43,5 +43,5 @@ object Polls {
       .componentWillMount { _ =>
         PollsActionsIO.refresh()
       }
-      .build  
+      .build
 }
