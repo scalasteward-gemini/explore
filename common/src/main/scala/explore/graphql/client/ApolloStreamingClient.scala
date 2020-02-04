@@ -8,25 +8,32 @@ import io.circe.parser._
 import fs2.concurrent.Queue
 import java.util.UUID
 import scala.collection.mutable
-import cats.effect.concurrent.Deferred
+import cats.effect.concurrent.MVar
 import cats.data.EitherT
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
+  implicit val timerIO: Timer[IO]
   implicit val csIO: ContextShift[IO]
 
   type Subscription[F[_], D] = ApolloSubscription[F, D]
 
-  case class ApolloSubscription[F[_]: LiftIO, D](stream: Stream[F, D], private val id: String)
-      extends Stoppable[F] {
-    def stop: F[Unit] =
-      LiftIO[F].liftIO(client.get.map { sender =>
-        subscriptions.get(id).foreach(_.terminate())
-        subscriptions -= id
-        sender.foreach(_.send(StreamingMessage.Stop(id)))
-      })
+  case class ApolloSubscription[F[_]: LiftIO, D](
+    stream: Stream[F, D],
+    private val id: String) extends Stoppable[F] {
+
+      def stop: F[Unit] =
+        LiftIO[F].liftIO(client.read.map { sender =>
+          subscriptions.get(id).foreach(_.terminate())
+          subscriptions -= id
+          sender.foreach(_.send(StreamingMessage.Stop(id)))
+        })
   }
 
   private trait Emitter {
+    val request: GraphQLRequest
+
     def emitData(json:  Json): Unit
     def emitError(json: Json): Unit
     def terminate(): Unit
@@ -34,8 +41,9 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
 
   type DataQueue[F[_], D] = Queue[F, Either[Throwable, Option[D]]]
 
-  private case class QueueEmitter[F[_]: Effect, D: Decoder](queue: DataQueue[F, D])
-      extends Emitter {
+  private case class QueueEmitter[F[_]: Effect, D: Decoder](
+    val queue: DataQueue[F, D],
+    val request: GraphQLRequest) extends Emitter {
 
     private def runEffect(effect: F[Unit]): Unit = {
       Effect[F].toIO(effect).unsafeRunAsyncAndForget()
@@ -57,9 +65,9 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
 
   private val subscriptions: mutable.Map[String, Emitter] = mutable.Map.empty
 
-  type WebSocketClient
+  protected type WebSocketClient
 
-  trait Sender {
+  protected trait Sender {
     def send(msg: StreamingMessage): Unit
   }
 
@@ -88,69 +96,93 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
         subscriptions -= id
     }
 
-  protected def createClient(
+  protected def createClientInternal(
     onOpen: Sender => Unit,
     onMessage: String => Unit,
-    onError: Exception => Unit): Unit
+    onError: Exception => Unit,
+    onClose: Boolean => Unit // Boolean = wasClean
+  ): Unit
 
-
-  lazy private val client: Deferred[IO, Either[Exception, Sender]] = {
-    val deferred = Deferred.unsafe[IO, Either[Exception, Sender]]
-
+  private def createClient(mvar: MVar[IO, Either[Exception, Sender]]): Unit = {
     try {
-      createClient(
+      createClientInternal(
         onOpen = { sender =>
-          deferred
-            .complete(Right(sender))
-            .map(_ => sender.send(StreamingMessage.ConnectionInit()))
+          mvar
+            .tryPut(Right(sender))
+            .map {
+              case true => sender.send(StreamingMessage.ConnectionInit())
+              case false => // TODO Handle Error
+            }
             .unsafeRunAsyncAndForget()
         },
 
         onMessage = processMessage _,
 
         onError = { exception =>
-          deferred
-            .complete(Left(exception))
-            .recover {
+          mvar
+            .tryPut(Left(exception))
+            .map{
               // Deferred was already complete. We must cancel all subscriptions.
-              case _: IllegalStateException => terminateAllSubscriptions()
+              case false => terminateAllSubscriptions()
+              case true => // Do nothing
             }
             .unsafeRunAsyncAndForget()        
+        },
+
+        onClose = { _ =>
+          (for {
+            _ <- mvar.take
+            _ <- IO.sleep(10 seconds)
+            _ <- IO(createClient(mvar))
+            sender <- mvar.read
+          } yield(
+            // Restart subscriptions on new client.
+            subscriptions.foreach{ case (id, emitter) =>
+              sender.foreach(_.send(StreamingMessage.Start(id, emitter.request)))
+            }
+          )).unsafeRunAsyncAndForget()          
         }
       )
     } catch {
       case e: Exception =>
-        deferred.complete(Left(e)).unsafeRunAsyncAndForget()
-    }      
-
-    deferred
+        mvar.put(Left(e)).unsafeRunAsyncAndForget() // TODO: Use tryPut and handle error
+    }
   }
 
-  private def buildQueue[F[_]: ConcurrentEffect, D: Decoder]: F[(String, DataQueue[F, D])] =
+  lazy private val client: MVar[IO, Either[Exception, Sender]] = {
+    val mvar = MVar.emptyIn[SyncIO, IO, Either[Exception, Sender]].unsafeRunSync()
+
+    createClient(mvar)
+
+    mvar
+  }
+
+  private def buildQueue[F[_]: ConcurrentEffect, D: Decoder](request: GraphQLRequest): F[(String, QueueEmitter[F, D])] =
     for {
       queue <- Queue.unbounded[F, Either[Throwable, Option[D]]]
     } yield {
       val id      = UUID.randomUUID().toString
-      val emitter = QueueEmitter(queue)
+      val emitter = QueueEmitter(queue, request)
       subscriptions += (id -> emitter)
-      (id, queue)
+      (id, emitter)
     }
 
   protected def subscribeInternal[F[_]: ConcurrentEffect, D: Decoder](
     subscription:  String,
     operationName: Option[String] = None,
     variables:     Option[Json] = None
-  ): F[Subscription[F, D]] =
+  ): F[Subscription[F, D]] = {
+    val request = GraphQLRequest(subscription, operationName, variables)
+
     (for {
-      sender <- EitherT(LiftIO[F].liftIO(client.get))
-      idq    <- EitherT.right[Exception](buildQueue[F, D])
+      sender <- EitherT(LiftIO[F].liftIO(client.read))
+      idEmitter <- EitherT.right[Exception](buildQueue[F, D](request))
+      (id, emitter) = idEmitter
     } yield {
-      val (id, q) = idq
-      sender.send(
-        StreamingMessage.Start(id, GraphQLRequest(subscription, operationName, variables))
-      )
-      ApolloSubscription(q.dequeue.rethrow.unNoneTerminate, id)
+      sender.send(StreamingMessage.Start(id, request))
+      ApolloSubscription(emitter.queue.dequeue.rethrow.unNoneTerminate, id)
     }).value.rethrow
+  }
 
   protected def queryInternal[F[_]: ConcurrentEffect, D: Decoder](
     document:      String,
