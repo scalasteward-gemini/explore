@@ -132,7 +132,7 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
         onClose = { _ =>
           (for {
             _ <- mvar.take
-            _ <- IO.sleep(10 seconds)
+            _ <- IO.sleep(10 seconds) // TODO: Backoff.
             _ <- IO(createClient(mvar))
             sender <- mvar.read
           } yield(
