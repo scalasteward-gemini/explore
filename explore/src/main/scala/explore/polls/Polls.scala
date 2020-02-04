@@ -2,6 +2,7 @@ package explore.polls
 
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
+import react.semanticui.elements.button._
 import react.common._
 import explore.model.Poll
 import explore.model.Actions.PollsActionsIO
@@ -28,10 +29,8 @@ object Polls {
               <.h2(poll.question),
               poll.options.toTagMod { option =>
                 <.span(
-                  <.button(^.tpe := "button",
-                           option.text,
-                           ^.onClick --> /*$.setState(State(true)).toIO
-                      .flatMap(_ => */ PollsActionsIO.vote(option.id))
+                  Button(onClick = /*$.setState(State(true)).toIO
+                      .flatMap(_ => */ PollsActionsIO.vote(option.id))(option.text)
                 )
               },
               // <.span("CASTING...").when($.state.casting),

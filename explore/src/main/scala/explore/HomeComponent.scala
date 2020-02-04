@@ -7,6 +7,8 @@ import explore.conditions.Conditions
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.raw.JsNumber
 import japgolly.scalajs.react.vdom.html_<^._
+import react.semanticui.elements.button._
+import react.common._
 import react.gridlayout._
 import react.sizeme._
 import model._
@@ -14,6 +16,7 @@ import explore.todo.Todo
 import explore.polls.Polls
 import cats.effect.IO
 import crystal.react.StreamRenderer
+import crystal.react.io.implicits._
 
 object HomeComponent {
 
@@ -42,7 +45,8 @@ object HomeComponent {
     )
 
   import AppState._
-  private val pollConnectionStatus = StreamRenderer.build(pollClient.statusStream[IO])
+  private val pollConnectionStatus = 
+    StreamRenderer.build(pollClient.statusStream[IO], Reusability.derive)
 
   val component =
     ScalaComponent
@@ -69,8 +73,11 @@ object HomeComponent {
                 ^.cls := "tile",
                 Tile(
                   Tile.Props("Target Position"),
-                  pollConnectionStatus(status => <.div(status.toString)),
                   Todo(Views.todoList),
+                  <.span(
+                    pollConnectionStatus(status => <.div(s"Poll connection is: $status")),
+                    Button(onClick = pollClient.close[IO]())("Close Connection")
+                  ),
                   Views.polls.streamRender(Polls.apply),
                   Views.target
                     .streamRender(targetOpt => <.div(targetOpt.whenDefined(target => Tpe(target))))

@@ -35,8 +35,6 @@ case class WebSocketGraphQLClient(uri: String)(
   ): IO[Unit] = IO {
     val ws = new WebSocket(uri, Protocol)
 
-    js.timers.setTimeout(20000)(ws.close())
-
     ws.onopen = { _: Event =>
       onOpen(WebSocketSender(ws)).unsafeRunAsyncAndForget()
     }
