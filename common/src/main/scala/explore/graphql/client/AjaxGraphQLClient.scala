@@ -11,7 +11,7 @@ import scala.util.Success
 import scala.util.Failure
 
 case class AjaxGraphQLClient(uri: String) extends GraphQLClient[Async] {
-  // Response
+  // Response format from Spec: https://github.com/APIs-guru/graphql-over-http
   // {
   //   "data": { ... }, // Typed
   //   "errors": [ ... ]

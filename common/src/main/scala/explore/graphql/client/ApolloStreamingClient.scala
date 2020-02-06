@@ -43,7 +43,8 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
         isEmpty <- client.isEmpty
         sender  <- if (!isEmpty) client.read.map(_.toOption) else IO(None)
         _ <- sender.foldMap(s =>
-          connectionStatus.set(StreamingClientStatus.Closing).flatMap(_ => s.close())
+          connectionStatus.set(StreamingClientStatus.Closing) *> 
+            s.close()
         )
       } yield ()
     )
@@ -57,10 +58,8 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
       LiftIO[F].liftIO(
         (for {
           sender <- EitherT(client.read)
-          emitter <- EitherT(subscriptions.get.map(_.get(id).toRight[Exception](new InvalidSubscriptionIdException(id))))
-          _ <- EitherT.right[Exception](emitter.terminate())
-          _ <- EitherT.right[Exception](subscriptions.update(_ - id))
-          _ <- EitherT.right[Exception](sender.send(StreamingMessage.Stop(id)))
+          _ <- EitherT(terminateSubscription(id).attempt)
+          _ <- EitherT.right[Throwable](sender.send(StreamingMessage.Stop(id)))
         } yield ()).value.rethrow
       )
   }
@@ -119,12 +118,16 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
       case Right(StreamingMessage.Error(id, json)) =>
         Logger[IO].error(s"Error message received on WebSocket for [$uri] and subscription id [$id]:\n$json")
       case Right(StreamingMessage.Complete(id)) =>
-        for {
-          emitter <- subscriptions.get.map(_.get(id))
-          _ <- emitter.foldMap(_.terminate())
-        } yield ()
+        terminateSubscription(id)
       case _ => IO.unit
     }
+
+  final protected def terminateSubscription(id: String): IO[Unit] =
+    (for {
+      emitter <- EitherT(subscriptions.get.map(_.get(id).toRight[Throwable](new InvalidSubscriptionIdException(id))))
+      _ <- EitherT.right[Throwable](emitter.terminate())
+      _ <- EitherT.right[Throwable](subscriptions.update(_ - id))      
+    } yield ()).value.rethrow
 
   final protected def terminateAllSubscriptions(): IO[Unit] = 
     for {
@@ -136,14 +139,14 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
   protected def createClientInternal(
     onOpen:    Sender => IO[Unit],
     onMessage: String => IO[Unit],
-    onError:   Exception => IO[Unit],
+    onError:   Throwable => IO[Unit],
     onClose:   Boolean => IO[Unit] // Boolean = wasClean
   ): IO[Unit]
 
   private def createClient(
-    mvar: MVar[IO, Either[Exception, Sender]],
+    mvar: MVar[IO, Either[Throwable, Sender]],
     onOpen: Sender => IO[Unit] = _ => IO.unit): IO[Unit] =
-      connectionStatus.set(StreamingClientStatus.Connecting).flatMap { _ =>
+      connectionStatus.set(StreamingClientStatus.Connecting) *> {
         try {
           createClientInternal(
             onOpen = { sender =>
@@ -155,9 +158,9 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
               } yield ()
             },
             onMessage = processMessage _,
-            onError = { exception =>
+            onError = { t =>
               mvar
-                .tryPut(Left(exception))
+                .tryPut(Left(t))
                 .flatMap {
                   // Connection was established. We must cancel all subscriptions. (or not?)
                   case false => terminateAllSubscriptions()
@@ -184,13 +187,13 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
             }
           )
         } catch {
-          case e: Exception =>
+          case e: Throwable =>
             mvar.put(Left(e)) // TODO: Use tryPut and handle error
         }
       }
 
-  lazy private val client: MVar[IO, Either[Exception, Sender]] = {
-    val mvar = MVar.emptyIn[SyncIO, IO, Either[Exception, Sender]].unsafeRunSync()
+  lazy private val client: MVar[IO, Either[Throwable, Sender]] = {
+    val mvar = MVar.emptyIn[SyncIO, IO, Either[Throwable, Sender]].unsafeRunSync()
 
     createClient(mvar).unsafeRunAsyncAndForget()
 
@@ -217,9 +220,9 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
     LiftIO[F].liftIO(
       (for {
         sender    <- EitherT(client.read)
-        idEmitter <- EitherT.right[Exception](buildQueue[D](request))
+        idEmitter <- EitherT.right[Throwable](buildQueue[D](request))
         (id, emitter) = idEmitter
-        _ <- EitherT.right[Exception](sender.send(StreamingMessage.Start(id, request)))
+        _ <- EitherT.right[Throwable](sender.send(StreamingMessage.Start(id, request)))
       } yield {
         ApolloSubscription(emitter.queue.dequeue.rethrow.unNoneTerminate.translate(toF), id)
       }).value.rethrow
@@ -237,7 +240,7 @@ trait ApolloStreamingClient extends GraphQLStreamingClient[ConcurrentEffect] {
       IO.asyncF[D] { cb =>
         subscribeInternal[IO, D](document, operationName, variables).flatMap { subscription =>
           subscription.stream.attempt.head
-            .evalMap(result => subscription.stop().flatMap(_ => IO(cb(result))))
+            .evalMap(result => IO(cb(result)))
             .compile
             .drain
         }

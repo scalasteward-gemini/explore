@@ -6,6 +6,7 @@ import io.circe.syntax._
 import io.circe.parser._
 import scala.scalajs.js
 import org.scalajs.dom.raw.{ CloseEvent, Event, MessageEvent }
+import io.chrisdavenport.log4cats.Logger
 
 // This implementation follows the Apollo protocol, specified in:
 // https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md
@@ -30,7 +31,7 @@ case class WebSocketGraphQLClient(uri: String)(
   protected def createClientInternal(
     onOpen:    Sender => IO[Unit],
     onMessage: String => IO[Unit],
-    onError:   Exception => IO[Unit],
+    onError:   Throwable => IO[Unit],
     onClose:   Boolean => IO[Unit]
   ): IO[Unit] = IO {
     val ws = new WebSocket(uri, Protocol)
@@ -40,25 +41,21 @@ case class WebSocketGraphQLClient(uri: String)(
     }
 
     ws.onmessage = { e: MessageEvent =>
-      e.data match {
-        case str: String => onMessage(str).unsafeRunAsyncAndForget()
+      (e.data match {
+        case str: String => onMessage(str)
         case other       =>
-          // TODO Proper logging
-          println(s"Unexpected event from WebSocket for [$uri]: [$other]")
-      }
+          Logger[IO].error(s"Unexpected event from WebSocket for [$uri]: [$other]")
+      }).unsafeRunAsyncAndForget()
     }
 
     ws.onerror = { e: Event =>
       val exception = parse(js.JSON.stringify(e)).map(json => new GraphQLException(List(json)))
       onError(
-        exception
-          .getOrElse[Exception](exception.swap.getOrElse(new Exception("Unexpected empty Either")))
+        exception.getOrElse[Throwable](exception.swap.toOption.get)
       ).unsafeRunAsyncAndForget()
     }
 
     ws.onclose = { e: CloseEvent =>
-      // Reconnect
-      println(s"CONNECTION CLOSED! WASCLEAN [${e.wasClean}]")
       onClose(e.wasClean).unsafeRunAsyncAndForget()
     }
   }

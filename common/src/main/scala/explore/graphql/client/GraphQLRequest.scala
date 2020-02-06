@@ -3,7 +3,7 @@ package explore.graphql.client
 import io.circe.Json
 import io.circe.generic.JsonCodec
 
-// Request
+// Request format from Spec: https://github.com/APIs-guru/graphql-over-http
 // {
 //   "query": "...",
 //   "operationName": "...",
